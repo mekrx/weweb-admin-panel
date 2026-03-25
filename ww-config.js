@@ -19,7 +19,7 @@ export default {
             ['statusActiveColor','statusInactiveColor','statusTerminatedColor','statusVacationColor'],
             ['statusActiveTextColor','statusInactiveTextColor','statusTerminatedTextColor','statusVacationTextColor'],
             ['actionActiveBg','actionActiveText','actionActiveBorder'],
-            ['roleBadgeDefaultBg','roleBadgeDefaultText'],
+            ['labelRoleColor'],
             ['overlayBgColor','panelWidth','panelBgColor'],
             ['modalBgColor','modalBorderRadius','modalMaxWidth','modalPadding'],
             ['toastSuccessBg','toastSuccessText','toastErrorBg','toastErrorText','toastInfoBg','toastInfoText'],
@@ -145,9 +145,9 @@ export default {
         actionActiveText: { label:{en:'Action Active Text'}, type:'Color', defaultValue:'#ffffff', bindable:true },
         actionActiveBorder: { label:{en:'Action Active Border'}, type:'Color', defaultValue:'#6366f1', bindable:true },
 
-        // === ROLE BADGE DEFAULTS ===
-        roleBadgeDefaultBg: { label:{en:'Role Badge Default BG'}, type:'Color', defaultValue:'#333333', bindable:true },
-        roleBadgeDefaultText: { label:{en:'Role Badge Default Text'}, type:'Color', defaultValue:'#cccccc', bindable:true },
+        // === ROLE BADGE COLORS ===
+        // Role colors are now stored in DB per-role and can be edited in the role editor
+        labelRoleColor: { label:{en:'Role editor: Color section label', pl:'Kolor roli'}, type:'Text', defaultValue:'Kolor roli', bindable:true },
 
         // === OVERLAY / PANEL ===
         overlayBgColor: { label:{en:'Overlay BG'}, type:'Color', defaultValue:'rgba(0,0,0,0.6)', bindable:true },

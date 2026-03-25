@@ -235,8 +235,8 @@
             <div v-if="detailTab==='roles'">
               <div class="section-label">{{L('labelAssignedRoles')}}</div>
               <div class="roles-wrap">
-                <span v-for="r in uniqueRoles(selectedUser)" :key="r" class="role-badge">
-                  <span :style="roleBadgeStyle(r)">{{r}}</span>
+                <span v-for="r in uniqueRoles(selectedUser)" :key="r" class="role-badge" :style="roleBadgeStyle(r)">
+                  {{r}}
                   <button class="role-remove" @click="confirmAction('removeRole',{uid:selectedUser.id,role:r})">✕</button>
                 </span>
                 <span v-if="!uniqueRoles(selectedUser).length" class="text-muted text-sm">{{L('labelNoRoles')}}</span>
@@ -283,7 +283,7 @@
       </div>
 
       <!-- ==================== COPY MODAL ==================== -->
-      <div v-if="showCopyModal&&selectedUser" class="overlay" @click.self="showCopyModal=false">
+      <div v-if="showCopyModal&&selectedUser" class="overlay" @click.self="closeCopyModal">
         <div class="modal modal-wide">
           <!-- Step 1: Select target -->
           <template v-if="copyStep===1">
@@ -317,7 +317,8 @@
             <div class="roles-wrap">
               <span
                 v-for="r in allRoles" :key="r"
-                class="role-badge clickable" :style="roleBadgeStyle(r)"
+                class="role-badge clickable"
+                :style="roleBadgeStyle(r)"
                 :class="{dimmed:!copyRoles.includes(r)}"
                 @click="toggleCopyRole(r)"
               >
@@ -402,10 +403,29 @@
 
       <!-- ==================== CREATE ROLE MODAL ==================== -->
       <div v-if="showCreateRole" class="overlay" @click.self="showCreateRole=false">
-        <div class="modal">
+        <div class="modal modal-wide">
           <div class="modal-title">{{L('labelNewRole')}}</div>
-          <input class="input-field" v-model="newRoleName" :placeholder="L('labelRoleNamePlaceholder')"/>
-          <button class="btn-primary margin-t-sm full-width" @click="createRole" :disabled="!newRoleName.trim()">{{L('labelCreate')}}</button>
+          <input class="input-field margin-b-sm" v-model="newRoleName" :placeholder="L('labelRoleNamePlaceholder')"/>
+          <div class="section-label margin-t-sm">{{L('labelRoleColor')}}</div>
+          <div class="color-row">
+            <label class="color-label">BG: <input type="color" v-model="newRoleColorBg" class="color-input"/></label>
+            <label class="color-label">Text: <input type="color" v-model="newRoleColorFg" class="color-input"/></label>
+            <span class="role-badge" :style="{backgroundColor:newRoleColorBg,color:newRoleColorFg}">{{newRoleName||'PREVIEW'}}</span>
+          </div>
+          <div class="section-label margin-t-md">{{L('labelTemplates')}}</div>
+          <div v-for="(tpl,idx) in newRoleTemplates" :key="idx" class="edit-template-row">
+            <select class="select-field" v-model="tpl.table_name" style="flex:1">
+              <option value="">— {{L('labelSelectTable')}} —</option>
+              <option v-for="t in availableTables" :key="t" :value="t">{{t}}</option>
+            </select>
+            <div class="actions-group">
+              <label v-for="act in ['select','insert','update','delete']" :key="act" class="action-toggle" :class="{active:tpl.actions.includes(act)}" @click.prevent="toggleAction(tpl, act)">{{act}}</label>
+              <label class="action-toggle" :class="{active:hasAllActions(tpl)}" @click.prevent="toggleAllActions(tpl)">ALL</label>
+            </div>
+            <button class="btn-icon-danger" @click="newRoleTemplates.splice(idx,1)">✕</button>
+          </div>
+          <button class="btn-ghost margin-t-sm" @click="newRoleTemplates.push({table_name:'',actions:[]})">+ {{L('labelAddTemplate')}}</button>
+          <button class="btn-primary margin-t-md full-width" @click="createRole" :disabled="!newRoleName.trim()">{{L('labelCreate')}}</button>
         </div>
       </div>
 
@@ -413,17 +433,21 @@
       <div v-if="showEditRole" class="overlay" @click.self="showEditRole=false">
         <div class="modal modal-wide">
           <div class="modal-title">{{L('labelEditRole')}}: {{editRoleName}}</div>
-          <div class="section-label margin-t-sm">{{L('labelTemplates')}}</div>
+          <div class="section-label margin-t-sm">{{L('labelRoleColor')}}</div>
+          <div class="color-row">
+            <label class="color-label">BG: <input type="color" v-model="editRoleColorBg" class="color-input"/></label>
+            <label class="color-label">Text: <input type="color" v-model="editRoleColorFg" class="color-input"/></label>
+            <span class="role-badge" :style="{backgroundColor:editRoleColorBg,color:editRoleColorFg}">{{editRoleName}}</span>
+          </div>
+          <div class="section-label margin-t-md">{{L('labelTemplates')}}</div>
           <div v-for="(tpl,idx) in editRoleTemplates" :key="idx" class="edit-template-row">
             <select class="select-field" v-model="tpl.table_name" style="flex:1">
               <option value="">— {{L('labelSelectTable')}} —</option>
               <option v-for="t in availableTables" :key="t" :value="t">{{t}}</option>
             </select>
             <div class="actions-group">
-              <label v-for="act in ['select','insert','update','delete','all']" :key="act" class="action-toggle" :class="{active:tpl.actions.includes(act)}">
-                <input type="checkbox" :value="act" v-model="tpl.actions" style="display:none"/>
-                {{act}}
-              </label>
+              <label v-for="act in ['select','insert','update','delete']" :key="act" class="action-toggle" :class="{active:tpl.actions.includes(act)}" @click.prevent="toggleAction(tpl, act)">{{act}}</label>
+              <label class="action-toggle" :class="{active:hasAllActions(tpl)}" @click.prevent="toggleAllActions(tpl)">ALL</label>
             </div>
             <button class="btn-icon-danger" @click="editRoleTemplates.splice(idx,1)">✕</button>
           </div>
@@ -443,10 +467,8 @@
               <option v-for="t in availableTables" :key="t" :value="t">{{t}}</option>
             </select>
             <div class="actions-group">
-              <label v-for="act in ['select','insert','update','delete','all']" :key="act" class="action-toggle" :class="{active:perm.actions.includes(act)}">
-                <input type="checkbox" :value="act" v-model="perm.actions" style="display:none"/>
-                {{act}}
-              </label>
+              <label v-for="act in ['select','insert','update','delete']" :key="act" class="action-toggle" :class="{active:perm.actions.includes(act)}" @click.prevent="toggleAction(perm, act)">{{act}}</label>
+              <label class="action-toggle" :class="{active:hasAllActions(perm)}" @click.prevent="toggleAllActions(perm)">ALL</label>
             </div>
             <button class="btn-icon-danger" @click="editPermsData.splice(idx,1)">✕</button>
           </div>
@@ -551,6 +573,9 @@ export default {
 
       // Create role
       newRoleName: '',
+      newRoleColorBg: '#2d3a1b',
+      newRoleColorFg: '#d4ffb8',
+      newRoleTemplates: [],
 
       // Extend
       extendDate: '',
@@ -559,6 +584,11 @@ export default {
       // Edit role
       editRoleName: '',
       editRoleTemplates: [],
+      editRoleColorBg: '#333',
+      editRoleColorFg: '#ccc',
+
+      // Role colors from DB
+      roleColorsMap: {},
 
       // Edit user permissions
       editPermsData: [],
@@ -648,8 +678,6 @@ export default {
         '--action-active-bg': c.actionActiveBg || '#6366f1',
         '--action-active-text': c.actionActiveText || '#ffffff',
         '--action-active-border': c.actionActiveBorder || '#6366f1',
-        '--role-badge-default-bg': c.roleBadgeDefaultBg || '#333',
-        '--role-badge-default-text': c.roleBadgeDefaultText || '#ccc',
         '--status-active-text': c.statusActiveTextColor || '#22c55e',
         '--status-inactive-text': c.statusInactiveTextColor || '#eab308',
         '--status-terminated-text': c.statusTerminatedTextColor || '#ef4444',
@@ -832,6 +860,14 @@ export default {
         this.cap = cRes.data || {};
         this.rolesWithTemplates = rRes.data || [];
         this.allRoles = this.rolesWithTemplates.map(x => x.name);
+        // Build role colors map from DB
+        const rcm = {};
+        for (const r of this.rolesWithTemplates) {
+          if (r.color_bg && r.color_fg) {
+            rcm[r.name] = { bg: r.color_bg, fg: r.color_fg };
+          }
+        }
+        this.roleColorsMap = rcm;
         this.allOdz = (oRes.data || []).map(x => ({ id: x.id, name: x.oddzial }));
 
         // Build audit tables from roles templates + known tables
@@ -917,6 +953,11 @@ export default {
         if (error) throw error;
         this.rolesWithTemplates = data || [];
         this.allRoles = this.rolesWithTemplates.map(x => x.name);
+        const rcm = {};
+        for (const r of this.rolesWithTemplates) {
+          if (r.color_bg && r.color_fg) rcm[r.name] = { bg: r.color_bg, fg: r.color_fg };
+        }
+        this.roleColorsMap = rcm;
       } catch (e) {
         console.error('loadRoles error:', e);
         this.showToast(e.message || 'Błąd ładowania ról', 'error');
@@ -962,11 +1003,20 @@ export default {
 
     async createRole() {
       try {
-        const { error } = await this.supabase.rpc('admin_create_role', { p_role_name: this.newRoleName.trim() });
+        const templates = this.newRoleTemplates
+          .filter(t => t.table_name && t.actions.length)
+          .map(t => ({ table_name: t.table_name, actions: t.actions }));
+        const { error } = await this.supabase.rpc('admin_create_role', {
+          p_role_name: this.newRoleName.trim(),
+          p_templates: templates,
+          p_color_bg: this.newRoleColorBg || null,
+          p_color_fg: this.newRoleColorFg || null,
+        });
         if (error) throw error;
         this.showToast('Rola utworzona', 'success');
         this.showCreateRole = false;
         this.newRoleName = '';
+        this.newRoleTemplates = [];
         await this.loadRoles();
       } catch (e) {
         this.showToast(e.message, 'error');
@@ -987,9 +1037,11 @@ export default {
     // ========== EDIT ROLE TEMPLATES ==========
     openEditRole(rl) {
       this.editRoleName = rl.name;
+      this.editRoleColorBg = rl.color_bg || this.roleColorsMap[rl.name]?.bg || ROLE_COLORS[rl.name]?.bg || '#333';
+      this.editRoleColorFg = rl.color_fg || this.roleColorsMap[rl.name]?.fg || ROLE_COLORS[rl.name]?.fg || '#ccc';
       this.editRoleTemplates = (rl.templates || []).map(t => ({
         table_name: t.table_name,
-        actions: [...(t.actions || [])],
+        actions: [...(t.actions || [])].filter(a => a !== 'all'),
       }));
       this.showEditRole = true;
     },
@@ -1004,7 +1056,13 @@ export default {
           p_templates: templates,
         });
         if (error) throw error;
-        this.showToast('Szablony roli zaktualizowane', 'success');
+        // Save color
+        await this.supabase.rpc('admin_update_role_color', {
+          p_role_name: this.editRoleName,
+          p_color_bg: this.editRoleColorBg,
+          p_color_fg: this.editRoleColorFg,
+        });
+        this.showToast('Rola zaktualizowana', 'success');
         this.showEditRole = false;
         await this.loadRoles();
         await this.loadAll();
@@ -1049,6 +1107,15 @@ export default {
     },
 
     // ========== COPY PERMISSIONS ==========
+    closeCopyModal() {
+      this.showCopyModal = false;
+      this.copyStep = 1;
+      this.copySearch = '';
+      this.copyTarget = null;
+      this.copyRoles = [];
+      this.copyOdz = [];
+    },
+
     selectCopyTarget(u) {
       this.copyTarget = u;
       // Load SOURCE user's roles to copy from
@@ -1196,7 +1263,28 @@ export default {
     },
 
     // ========== FORMATTING ==========
+    toggleAction(tpl, act) {
+      const idx = tpl.actions.indexOf(act);
+      if (idx > -1) tpl.actions.splice(idx, 1);
+      else tpl.actions.push(act);
+    },
+
+    hasAllActions(tpl) {
+      return ['select','insert','update','delete'].every(a => tpl.actions.includes(a));
+    },
+
+    toggleAllActions(tpl) {
+      const allActs = ['select','insert','update','delete'];
+      if (this.hasAllActions(tpl)) {
+        tpl.actions = [];
+      } else {
+        tpl.actions = [...allActs];
+      }
+    },
+
     roleBadgeStyle(role) {
+      const dbColor = this.roleColorsMap[role?.toLowerCase()] || this.roleColorsMap[role];
+      if (dbColor) return { backgroundColor: dbColor.bg, color: dbColor.fg };
       const c = ROLE_COLORS[role?.toLowerCase()] || { bg: '#333', fg: '#ccc' };
       return { backgroundColor: c.bg, color: c.fg };
     },
@@ -1281,7 +1369,7 @@ export default {
 .text-green { color: #22c55e; }
 .text-red { color: #ef4444; }
 .mono { font-family: monospace; }
-.ellipsis { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 120px; }
+.ellipsis { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 140px; }
 .margin-t-sm { margin-top: var(--sp-sm); }
 .margin-t-md { margin-top: var(--sp-md); }
 .margin-t-lg { margin-top: var(--sp-lg); }
@@ -1322,12 +1410,13 @@ export default {
 .select-field option { background: var(--select-opt-bg); color: var(--select-opt-text); }
 
 /* ========== TABLE ========== */
-.table-header { display: grid; grid-template-columns: 1.4fr 180px 120px 80px 120px; padding: 10px var(--sp-md); font-size: var(--small-size); color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: .8px; border-bottom: 1px solid var(--border); }
-.table-row { display: grid; grid-template-columns: 1.4fr 180px 120px 80px 120px; align-items: center; padding: 12px var(--sp-md); cursor: pointer; border-bottom: 1px solid var(--row-border); transition: background var(--anim-dur); }
+.table-header { display: grid; grid-template-columns: 1.2fr 220px 140px 80px 120px; padding: 10px var(--sp-md); font-size: var(--small-size); color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: .8px; border-bottom: 1px solid var(--border); }
+.table-row { display: grid; grid-template-columns: 1.2fr 220px 140px 80px 120px; align-items: center; padding: 12px var(--sp-md); cursor: pointer; border-bottom: 1px solid var(--row-border); transition: background var(--anim-dur); }
 .table-row:hover { background: var(--row-hover); }
 .table-row.selected { background: var(--row-selected); }
 .user-name { font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
 .user-email { margin-top: 2px; }
+.col-roles { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
 .col-status { display: flex; align-items: center; gap: 6px; }
 
 /* ========== BADGES ========== */
@@ -1474,6 +1563,11 @@ export default {
 .toast.success { background: var(--toast-ok-bg); color: var(--toast-ok-text); }
 .toast.error { background: var(--toast-err-bg); color: var(--toast-err-text); }
 .toast.info { background: var(--toast-info-bg); color: var(--toast-info-text); }
+
+/* ========== COLOR PICKER ========== */
+.color-row { display: flex; align-items: center; gap: var(--sp-md); margin-bottom: var(--sp-sm); flex-wrap: wrap; }
+.color-label { display: flex; align-items: center; gap: 6px; font-size: var(--small-size); font-weight: 500; color: var(--text-muted); }
+.color-input { width: 32px; height: 32px; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; background: none; padding: 0; }
 
 /* ========== SCROLLBAR ========== */
 ::-webkit-scrollbar { width: 5px; }
