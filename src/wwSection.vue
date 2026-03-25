@@ -13,9 +13,9 @@
       <div class="layout">
         <!-- SIDEBAR -->
         <nav v-if="content.showSidebar!==false" class="sidebar">
-          <div class="sidebar-brand">
-            <div class="sidebar-name">FBA Admin</div>
-            <div class="text-muted text-sm">v3 Panel</div>
+          <div v-if="L('labelSidebarTitle')" class="sidebar-brand">
+            <div class="sidebar-name">{{L('labelSidebarTitle')}}</div>
+            <div v-if="L('labelSidebarSubtitle')" class="text-muted text-sm">{{L('labelSidebarSubtitle')}}</div>
           </div>
           <div class="sidebar-nav">
             <button
@@ -39,7 +39,7 @@
           <div v-else-if="activePage==='dashboard'" class="page">
             <h1 class="page-title">{{L('labelDashboard')}}</h1>
             <div class="stats-row">
-              <div v-for="s in dashCards" :key="s.l" class="stat-card">
+              <div v-for="s in dashCards" :key="s.id" class="stat-card">
                 <div class="stat-accent" :style="{background:s.c}"></div>
                 <div class="stat-value">{{s.v}}</div>
                 <div class="stat-label text-muted text-sm">{{s.l}}</div>
@@ -96,7 +96,7 @@
                   <div class="user-email text-muted text-sm">{{u.email}}</div>
                 </div>
                 <div class="col-roles">
-                  <span v-for="r in uniqueRoles(u)" :key="r" class="role-badge-sm" :style="roleBadgeStyle(r)">{{r}}</span>
+                  <span v-for="r in uniqueRoles(u).slice(0,3)" :key="r" class="role-badge-sm" :style="roleBadgeStyle(r)">{{r}}</span>
                   <span v-if="uniqueRoles(u).length>3" class="text-muted text-sm">+{{uniqueRoles(u).length-3}}</span>
                 </div>
                 <div class="col-dept text-muted ellipsis">{{truncate(u.oddzial,16)||'—'}}</div>
@@ -645,6 +645,11 @@ export default {
         '--nav-active-bg': c.navActiveBg || 'rgba(99,102,241,0.12)',
         '--nav-inactive': c.navInactiveColor || '#8a8880',
         '--nav-hover-bg': c.navHoverBg || 'rgba(99,102,241,0.06)',
+        '--action-active-bg': c.actionActiveBg || '#6366f1',
+        '--action-active-text': c.actionActiveText || '#ffffff',
+        '--action-active-border': c.actionActiveBorder || '#6366f1',
+        '--role-badge-default-bg': c.roleBadgeDefaultBg || '#333',
+        '--role-badge-default-text': c.roleBadgeDefaultText || '#ccc',
         '--status-active-text': c.statusActiveTextColor || '#22c55e',
         '--status-inactive-text': c.statusInactiveTextColor || '#eab308',
         '--status-terminated-text': c.statusTerminatedTextColor || '#ef4444',
@@ -673,13 +678,18 @@ export default {
 
     dashCards() {
       const s = this.stats;
-      return [
-        { v: s.total_managers || 0, l: this.L('labelStatManagers') || 'Aktywni menedżerowie', c: 'var(--status-active)' },
-        { v: s.active_clients || 0, l: this.L('labelStatClients') || 'Aktywni klienci', c: 'var(--accent)' },
-        { v: s.on_vacation_now || 0, l: this.L('labelStatVacation') || 'Na urlopie', c: 'var(--status-inactive)' },
-        { v: s.pending_vacations || 0, l: this.L('labelStatPending') || 'Oczekujące urlopy', c: 'var(--status-terminated)' },
-        { v: s.recent_changes_24h || 0, l: this.L('labelStatChanges') || 'Zmiany 24h', c: '#8b5cf6' },
+      const c = this.content;
+      const all = [
+        { id: 'managers', v: s.total_managers || 0, l: this.L('labelStatManagers') || 'Aktywni menedżerowie', c: 'var(--status-active)', show: c.showStatManagers !== false },
+        { id: 'clients', v: s.active_clients || 0, l: this.L('labelStatClients') || 'Aktywni klienci', c: 'var(--accent)', show: c.showStatClients !== false },
+        { id: 'vacation', v: s.on_vacation_now || 0, l: this.L('labelStatVacation') || 'Na urlopie', c: 'var(--status-inactive)', show: c.showStatVacation !== false },
+        { id: 'pending', v: s.pending_vacations || 0, l: this.L('labelStatPending') || 'Oczekujące urlopy', c: 'var(--status-terminated)', show: c.showStatPending !== false },
+        { id: 'changes', v: s.recent_changes_24h || 0, l: this.L('labelStatChanges') || 'Zmiany 24h', c: '#8b5cf6', show: c.showStatChanges !== false },
+        { id: 'temp', v: s.active_temp_grants || 0, l: this.L('labelStatTempGrants') || 'Aktywne tymcz. dostępy', c: '#f59e0b', show: c.showStatTempGrants === true },
+        { id: 'roles_count', v: s.total_roles || this.allRoles.length || 0, l: this.L('labelStatRolesCount') || 'Zdefiniowane role', c: '#6366f1', show: c.showStatRolesCount === true },
+        { id: 'depts', v: s.total_departments || this.allOdz.length || 0, l: this.L('labelStatDepts') || 'Oddziały', c: '#0ea5e9', show: c.showStatDepts === true },
       ];
+      return all.filter(x => x.show);
     },
 
     filteredUsers() {
@@ -1041,7 +1051,9 @@ export default {
     // ========== COPY PERMISSIONS ==========
     selectCopyTarget(u) {
       this.copyTarget = u;
+      // Load SOURCE user's roles to copy from
       this.copyRoles = [...this.sourceRoles];
+      // Load SOURCE user's departments
       const s = this.selectedUser?.allowed_oddzial_ids;
       this.copyOdz = s === null ? this.allOdz.map(o => o.id) : [...(s || [])];
       this.copyStep = 2;
@@ -1059,16 +1071,18 @@ export default {
 
     async applyCopy() {
       try {
-        const p = {
+        const params = {
           p_from_user_id: this.selectedUser.id,
           p_to_user_id: this.copyTarget.id,
           p_copy_roles: true,
           p_copy_oddzialy: !this.copyOdzChanged,
-          p_add_roles: this.copyAdded.length ? this.copyAdded : null,
-          p_remove_roles: this.copyRemoved.length ? this.copyRemoved : null,
-          p_override_oddzialy: this.copyOdzChanged ? this.copyOdz : null,
         };
-        const { error } = await this.supabase.rpc('admin_copy_permissions', p);
+        // Only pass arrays if there are changes
+        if (this.copyAdded.length) params.p_add_roles = this.copyAdded;
+        if (this.copyRemoved.length) params.p_remove_roles = this.copyRemoved;
+        if (this.copyOdzChanged) params.p_override_oddzialy = this.copyOdz;
+        
+        const { data, error } = await this.supabase.rpc('admin_copy_permissions', params);
         if (error) throw error;
         this.showToast('Uprawnienia skopiowane', 'success');
         this.showCopyModal = false;
@@ -1143,7 +1157,7 @@ export default {
         const { error } = await this.supabase.rpc('admin_revoke_temp_grant', { p_grant_id: g.id });
         if (error) throw error;
         this.showToast('Cofnięto', 'success');
-        await this.loadTempGrants();
+        await Promise.all([this.loadTempGrants(), this.loadAll()]);
       } catch (e) {
         this.showToast(e.message, 'error');
       }
@@ -1320,7 +1334,7 @@ export default {
 .badge-sa { font-size: 9px; background: #f59e0b; color: #000; padding: 1px 6px; border-radius: 10px; font-weight: 700; }
 .badge-vacation { font-size: 9px; background: var(--status-vacation); color: #fff; padding: 1px 6px; border-radius: 10px; font-weight: 700; }
 .role-badge { display: inline-flex; align-items: center; gap: 4px; padding: var(--badge-pad); border-radius: var(--badge-radius); font-size: var(--badge-size); font-weight: 600; letter-spacing: .5px; text-transform: uppercase; white-space: nowrap; position: relative; }
-.role-badge-sm { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .3px; }
+.role-badge-sm { display: inline-block; padding: var(--badge-pad); border-radius: var(--badge-radius); font-size: var(--badge-size); font-weight: 600; text-transform: uppercase; letter-spacing: .3px; }
 .role-badge.clickable { cursor: pointer; transition: transform .1s, opacity .15s; border: 1px solid transparent; }
 .role-badge.clickable:hover { transform: scale(1.08); }
 .role-badge.dimmed { opacity: .3; border: 1px dashed rgba(255,255,255,.15); }
@@ -1341,7 +1355,7 @@ export default {
 .action-all { background: #2d1b4e; color: #d4b8ff; }
 .actions-group { display: flex; gap: 4px; flex-wrap: wrap; }
 .action-toggle { font-size: 10px; padding: 3px 8px; border-radius: 4px; font-weight: 600; text-transform: uppercase; cursor: pointer; background: var(--card-bg); border: 1px solid var(--border); color: var(--text-muted); transition: all .15s; }
-.action-toggle.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.action-toggle.active { background: var(--action-active-bg); color: var(--action-active-text); border-color: var(--action-active-border); }
 
 /* ========== STATUS ========== */
 .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex-shrink: 0; }

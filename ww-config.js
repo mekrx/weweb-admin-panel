@@ -4,7 +4,7 @@ export default {
         icon: 'settings',
         customStylePropertiesOrder: [
             ['supabaseUrl', 'supabaseAnonKey'],
-            ['showSidebar','sidebarWidth','sidebarBgColor','sidebarBorderColor'],
+            ['showSidebar','labelSidebarTitle','labelSidebarSubtitle','sidebarWidth','sidebarBgColor','sidebarBorderColor'],
             ['navActiveColor','navActiveBg','navInactiveColor','navHoverBg'],
             ['contentPadding','contentMaxWidth'],
             ['accentColor','accentHoverColor','bgColor','cardBgColor','cardBorderRadius'],
@@ -18,6 +18,8 @@ export default {
             ['tableHeaderBg','tableRowHoverBg','tableRowSelectedBg','tableRowBorderColor'],
             ['statusActiveColor','statusInactiveColor','statusTerminatedColor','statusVacationColor'],
             ['statusActiveTextColor','statusInactiveTextColor','statusTerminatedTextColor','statusVacationTextColor'],
+            ['actionActiveBg','actionActiveText','actionActiveBorder'],
+            ['roleBadgeDefaultBg','roleBadgeDefaultText'],
             ['overlayBgColor','panelWidth','panelBgColor'],
             ['modalBgColor','modalBorderRadius','modalMaxWidth','modalPadding'],
             ['toastSuccessBg','toastSuccessText','toastErrorBg','toastErrorText','toastInfoBg','toastInfoText'],
@@ -25,7 +27,8 @@ export default {
             ['spacingXs','spacingSm','spacingMd','spacingLg','spacingXl'],
             ['auditAutoRefresh','auditRefreshInterval'],
             ['labelDashboard','labelUsers','labelRoles','labelAudit','labelTemp'],
-            ['labelStatManagers','labelStatClients','labelStatVacation','labelStatPending','labelStatChanges'],
+            ['labelStatManagers','labelStatClients','labelStatVacation','labelStatPending','labelStatChanges','labelStatTempGrants','labelStatRolesCount','labelStatDepts'],
+            ['showStatManagers','showStatClients','showStatVacation','showStatPending','showStatChanges','showStatTempGrants','showStatRolesCount','showStatDepts'],
             ['labelRolesDistribution','labelDepartments'],
             ['labelColUser','labelColRoles','labelColDept','labelColClients','labelColStatus'],
             ['labelStatusActive','labelStatusInactive','labelStatusTerminated','labelStatusVacation'],
@@ -54,6 +57,8 @@ export default {
 
         // === SIDEBAR ===
         showSidebar: { label:{en:'Show Sidebar'}, type:'OnOff', defaultValue:true, bindable:true, responsive:true },
+        labelSidebarTitle: { label:{en:'Sidebar Title'}, type:'Text', defaultValue:'', bindable:true },
+        labelSidebarSubtitle: { label:{en:'Sidebar Subtitle'}, type:'Text', defaultValue:'', bindable:true },
         sidebarWidth: { label:{en:'Sidebar Width'}, type:'Length', options:{unitChoices:[{value:'px',label:'px',min:140,max:400}]}, defaultValue:'220px', bindable:true, responsive:true },
         sidebarBgColor: { label:{en:'Sidebar BG'}, type:'Color', defaultValue:'#161616', bindable:true, responsive:true },
         sidebarBorderColor: { label:{en:'Sidebar Border'}, type:'Color', defaultValue:'#2a2a28', bindable:true, responsive:true },
@@ -135,6 +140,15 @@ export default {
         statusTerminatedTextColor: { label:{en:'Terminated Text'}, type:'Color', defaultValue:'#ef4444', bindable:true },
         statusVacationTextColor: { label:{en:'Vacation Text'}, type:'Color', defaultValue:'#6366f1', bindable:true },
 
+        // === ACTION TOGGLE (role/permission editor) ===
+        actionActiveBg: { label:{en:'Action Active BG'}, type:'Color', defaultValue:'#6366f1', bindable:true },
+        actionActiveText: { label:{en:'Action Active Text'}, type:'Color', defaultValue:'#ffffff', bindable:true },
+        actionActiveBorder: { label:{en:'Action Active Border'}, type:'Color', defaultValue:'#6366f1', bindable:true },
+
+        // === ROLE BADGE DEFAULTS ===
+        roleBadgeDefaultBg: { label:{en:'Role Badge Default BG'}, type:'Color', defaultValue:'#333333', bindable:true },
+        roleBadgeDefaultText: { label:{en:'Role Badge Default Text'}, type:'Color', defaultValue:'#cccccc', bindable:true },
+
         // === OVERLAY / PANEL ===
         overlayBgColor: { label:{en:'Overlay BG'}, type:'Color', defaultValue:'rgba(0,0,0,0.6)', bindable:true },
         panelWidth: { label:{en:'Panel W'}, type:'Length', options:{unitChoices:[{value:'px',label:'px',min:300,max:800}]}, defaultValue:'540px', bindable:true, responsive:true },
@@ -170,11 +184,11 @@ export default {
         auditRefreshInterval: { label:{en:'Refresh (sec)'}, type:'Number', options:{min:1,max:60,step:1}, defaultValue:3, bindable:true },
 
         // === NAV LABELS ===
-        labelDashboard: { label:{en:'Label: Dashboard'}, type:'Text', defaultValue:'Dashboard', bindable:true },
-        labelUsers: { label:{en:'Label: Users'}, type:'Text', defaultValue:'Użytkownicy', bindable:true },
-        labelRoles: { label:{en:'Label: Roles'}, type:'Text', defaultValue:'Role', bindable:true },
-        labelAudit: { label:{en:'Label: Audit'}, type:'Text', defaultValue:'Audyt', bindable:true },
-        labelTemp: { label:{en:'Label: Temporary'}, type:'Text', defaultValue:'Tymczasowe', bindable:true },
+        labelDashboard: { label:{en:'Nav: Dashboard tab', pl:'Zakładka Dashboard'}, type:'Text', defaultValue:'Dashboard', bindable:true },
+        labelUsers: { label:{en:'Nav: Users tab', pl:'Zakładka Użytkownicy'}, type:'Text', defaultValue:'Użytkownicy', bindable:true },
+        labelRoles: { label:{en:'Nav: Roles tab', pl:'Zakładka Role'}, type:'Text', defaultValue:'Role', bindable:true },
+        labelAudit: { label:{en:'Nav: Audit tab', pl:'Zakładka Audyt'}, type:'Text', defaultValue:'Audyt', bindable:true },
+        labelTemp: { label:{en:'Nav: Temporary tab', pl:'Zakładka Tymczasowe'}, type:'Text', defaultValue:'Tymczasowe', bindable:true },
 
         // === DASHBOARD STAT LABELS ===
         labelStatManagers: { label:{en:'Stat: Managers'}, type:'Text', defaultValue:'Aktywni menedżerowie', bindable:true },
@@ -182,6 +196,17 @@ export default {
         labelStatVacation: { label:{en:'Stat: On Vacation'}, type:'Text', defaultValue:'Na urlopie', bindable:true },
         labelStatPending: { label:{en:'Stat: Pending'}, type:'Text', defaultValue:'Oczekujące urlopy', bindable:true },
         labelStatChanges: { label:{en:'Stat: Changes 24h'}, type:'Text', defaultValue:'Zmiany 24h', bindable:true },
+        labelStatTempGrants: { label:{en:'Stat: Temp Grants'}, type:'Text', defaultValue:'Aktywne tymcz. dostępy', bindable:true },
+        labelStatRolesCount: { label:{en:'Stat: Roles Count'}, type:'Text', defaultValue:'Zdefiniowane role', bindable:true },
+        labelStatDepts: { label:{en:'Stat: Departments'}, type:'Text', defaultValue:'Oddziały', bindable:true },
+        showStatManagers: { label:{en:'Show: Managers'}, type:'OnOff', defaultValue:true, bindable:true },
+        showStatClients: { label:{en:'Show: Clients'}, type:'OnOff', defaultValue:true, bindable:true },
+        showStatVacation: { label:{en:'Show: Vacation'}, type:'OnOff', defaultValue:true, bindable:true },
+        showStatPending: { label:{en:'Show: Pending'}, type:'OnOff', defaultValue:true, bindable:true },
+        showStatChanges: { label:{en:'Show: Changes 24h'}, type:'OnOff', defaultValue:true, bindable:true },
+        showStatTempGrants: { label:{en:'Show: Temp Grants'}, type:'OnOff', defaultValue:false, bindable:true },
+        showStatRolesCount: { label:{en:'Show: Roles Count'}, type:'OnOff', defaultValue:false, bindable:true },
+        showStatDepts: { label:{en:'Show: Departments'}, type:'OnOff', defaultValue:false, bindable:true },
         labelRolesDistribution: { label:{en:'Section: Roles Distribution'}, type:'Text', defaultValue:'Rozkład ról', bindable:true },
         labelDepartments: { label:{en:'Section: Departments'}, type:'Text', defaultValue:'Oddziały', bindable:true },
 
