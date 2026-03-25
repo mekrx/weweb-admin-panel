@@ -1,0 +1,20 @@
+{
+  "name": "weweb-admin-panel",
+  "version": "1.0.0",
+  "private": true,
+  "main": "ww-config.js",
+  "weweb": {
+    "type": "section"
+  },
+  "scripts": {
+    "serve": "weweb serve",
+    "build": "weweb build"
+  },
+  "dependencies": {
+    "vue": "^3.2.0",
+    "@supabase/supabase-js": "^2.39.0"
+  },
+  "devDependencies": {
+    "@weweb/cli": "latest"
+  }
+}
