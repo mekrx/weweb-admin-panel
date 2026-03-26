@@ -4,7 +4,7 @@ export default {
         icon: 'settings',
         customStylePropertiesOrder: [
             ['supabaseUrl', 'supabaseAnonKey'],
-            ['showSidebar','labelSidebarTitle','labelSidebarSubtitle','sidebarWidth','sidebarBgColor','sidebarBorderColor'],
+            ['showSidebar','labelSidebarTitle','labelSidebarSubtitle','sidebarWidth','sidebarBgColor','sidebarBorderColor','sidebarTopOffset'],
             ['navActiveColor','navActiveBg','navInactiveColor','navHoverBg'],
             ['detailTabActiveColor','detailTabActiveBorder'],
             ['contentPadding','contentMaxWidth'],
@@ -14,7 +14,7 @@ export default {
             ['titleFontSize','titleFontWeight','bodyFontSize','smallFontSize','fontFamily'],
             ['badgeFontSize','badgePadding','badgeBorderRadius'],
             ['inputBgColor','inputBorderColor','inputFocusBorderColor','inputBorderRadius','inputPadding','inputFontSize'],
-            ['selectBgColor','selectTextColor','selectBorderColor','selectFontSize','selectOptionBg','selectOptionText'],
+            ['selectBgColor','selectTextColor','selectBorderColor','selectFontSize','selectOptionBg','selectOptionText','selectBorderRadius'],
             ['btnPrimaryBg','btnPrimaryText','btnPrimaryBorder','btnSecondaryBg','btnSecondaryText','btnSecondaryBorder','btnBorderRadius','btnPadding','btnFontSize'],
             ['btnGhostBg','btnGhostText','btnGhostBorder','btnGhostHoverBorder'],
             ['btnDangerColor','btnDangerBg','btnDangerBorder'],
@@ -23,7 +23,7 @@ export default {
             ['statusActiveColor','statusInactiveColor','statusTerminatedColor','statusVacationColor'],
             ['statusActiveTextColor','statusInactiveTextColor','statusTerminatedTextColor','statusVacationTextColor'],
             ['actionActiveBg','actionActiveText','actionActiveBorder'],
-            ['odzActiveBg','odzActiveBorder','odzActiveText','odzInactiveBg','odzInactiveBorder','odzInactiveText','odzTempBorder','odzIndicatorOn','odzIndicatorOff'],
+            ['odzActiveBg','odzActiveBorder','odzActiveText','odzInactiveBg','odzInactiveBorder','odzInactiveText','odzTempBorder','odzTempBg','odzTempText','odzIndicatorOn','odzIndicatorOff','tempIndicatorColor','tempRoleBorder'],
             ['labelRoleColor'],
             ['overlayBgColor','panelWidth','panelBgColor'],
             ['modalBgColor','modalBorderRadius','modalMaxWidth','modalPadding'],
@@ -69,6 +69,7 @@ export default {
         sidebarWidth: { label:{en:'Sidebar Width'}, type:'Length', options:{unitChoices:[{value:'px',label:'px',min:140,max:400}]}, defaultValue:'220px', bindable:true, responsive:true },
         sidebarBgColor: { label:{en:'Sidebar BG'}, type:'Color', defaultValue:'#161616', bindable:true, responsive:true },
         sidebarBorderColor: { label:{en:'Sidebar Border'}, type:'Color', defaultValue:'#2a2a28', bindable:true, responsive:true },
+        sidebarTopOffset: { label:{en:'Sidebar Top Offset', pl:'Offset górny sidebara'}, type:'Length', options:{unitChoices:[{value:'px',label:'px',min:0,max:200}]}, defaultValue:'0px', bindable:true, responsive:true },
 
         // === NAV ===
         navActiveColor: { label:{en:'Nav Active Text'}, type:'Color', defaultValue:'#6366f1', bindable:true, responsive:true },
@@ -123,6 +124,7 @@ export default {
         selectFontSize: { label:{en:'Select Font'}, type:'Length', options:{unitChoices:[{value:'px',label:'px',min:10,max:18}]}, defaultValue:'13px', bindable:true, responsive:true },
         selectOptionBg: { label:{en:'Option BG'}, type:'Color', defaultValue:'#1c1c1c', bindable:true },
         selectOptionText: { label:{en:'Option Text'}, type:'Color', defaultValue:'#e8e6e1', bindable:true },
+        selectBorderRadius: { label:{en:'Select Radius', pl:'Select: zaokrąglenie'}, type:'Length', options:{unitChoices:[{value:'px',label:'px',min:0,max:20}]}, defaultValue:'8px', bindable:true, responsive:true },
 
         // === BUTTONS ===
         btnPrimaryBg: { label:{en:'Btn BG'}, type:'Color', defaultValue:'#6366f1', bindable:true, responsive:true },
@@ -184,9 +186,13 @@ export default {
         odzInactiveBg: { label:{en:'Dept Inactive BG', pl:'Oddział nieaktywny: tło'}, type:'Color', defaultValue:'transparent', bindable:true },
         odzInactiveBorder: { label:{en:'Dept Inactive Border', pl:'Oddział nieaktywny: ramka'}, type:'Color', defaultValue:'#2a2a28', bindable:true },
         odzInactiveText: { label:{en:'Dept Inactive Text', pl:'Oddział nieaktywny: tekst'}, type:'Color', defaultValue:'#555555', bindable:true },
-        odzTempBorder: { label:{en:'Dept Temp Border', pl:'Oddział tymczasowy: ramka'}, type:'Color', defaultValue:'#f59e0b', bindable:true },
+        odzTempBorder: { label:{en:'Dept Temp Border', pl:'Oddział tymczасowy: ramka'}, type:'Color', defaultValue:'#f59e0b', bindable:true },
+        odzTempBg: { label:{en:'Dept Temp BG', pl:'Oddział tymczasowy: tło'}, type:'Color', defaultValue:'rgba(245,158,11,0.1)', bindable:true },
+        odzTempText: { label:{en:'Dept Temp Text', pl:'Oddział tymczasowy: tekst'}, type:'Color', defaultValue:'#f59e0b', bindable:true },
         odzIndicatorOn: { label:{en:'Dept Indicator On', pl:'Wskaźnik oddziału: aktywny'}, type:'Color', defaultValue:'#6366f1', bindable:true },
         odzIndicatorOff: { label:{en:'Dept Indicator Off', pl:'Wskaźnik oddziału: nieaktywny'}, type:'Color', defaultValue:'#333333', bindable:true },
+        tempIndicatorColor: { label:{en:'Temp Icon Color', pl:'Kolor ikony tymczasowej'}, type:'Color', defaultValue:'#f59e0b', bindable:true },
+        tempRoleBorder: { label:{en:'Temp Role Border', pl:'Tymczasowa rola: ramka'}, type:'Color', defaultValue:'#f59e0b', bindable:true },
 
         // === ROLE BADGE COLORS ===
         labelRoleColor: { label:{en:'Role editor: Color section label', pl:'Kolor roli'}, type:'Text', defaultValue:'Kolor roli', bindable:true },
