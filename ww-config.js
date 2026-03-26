@@ -278,7 +278,7 @@ export default {
         labelRolesDistribution: { label:{en:'Section: Roles Distribution'}, type:'Text', defaultValue:'Rozkład ról', bindable:true },
         labelDepartments: { label:{en:'Section: Departments'}, type:'Text', defaultValue:'Oddziały', bindable:true },
         labelClientsChart: { label:{en:'Section: Clients Chart'}, type:'Text', defaultValue:'Aktywni klienci — wykres', bindable:true },
-        labelDiffPeriod: { label:{en:'Label: Diff period hint'}, type:'Text', defaultValue:'разница за 30 дн.', bindable:true },
+        labelDiffPeriod: { label:{en:'Label: Diff period hint'}, type:'Text', defaultValue:'różnica 30 dni', bindable:true },
 
         // === TABLE COLUMN LABELS ===
         labelColUser: { label:{en:'Col: User header text', pl:'Nagłówek kolumny: Użytkownik'}, type:'Text', defaultValue:'UŻYTKOWNIK', bindable:true },
