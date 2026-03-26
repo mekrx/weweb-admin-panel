@@ -390,21 +390,21 @@ export default {
         labelConfirmRevokeTitle: { label:{en:'Confirm: Revoke grant title', pl:'Tytuł: Cofnięcie tymczasowego dostępu'}, type:'Text', defaultValue:'Cofnięcie tymczasowego dostępu', bindable:true },
 
         // === ICONS — NAV ===
-        iconNavDashboard: { label:{en:'Icon: Dashboard nav', pl:'Ikona: Dashboard'}, type:'Icon', bindable:true },
-        iconNavUsers: { label:{en:'Icon: Users nav', pl:'Ikona: Użytkownicy'}, type:'Icon', bindable:true },
-        iconNavRoles: { label:{en:'Icon: Roles nav', pl:'Ikona: Role'}, type:'Icon', bindable:true },
-        iconNavAudit: { label:{en:'Icon: Audit nav', pl:'Ikona: Audyt'}, type:'Icon', bindable:true },
-        iconNavTemp: { label:{en:'Icon: Temporary nav', pl:'Ikona: Tymczasowe'}, type:'Icon', bindable:true },
+        iconNavDashboard: { label:{en:'Icon: Dashboard nav', pl:'Ikona: Dashboard'}, type:'SystemIcon', bindable:true },
+        iconNavUsers: { label:{en:'Icon: Users nav', pl:'Ikona: Użytkownicy'}, type:'SystemIcon', bindable:true },
+        iconNavRoles: { label:{en:'Icon: Roles nav', pl:'Ikona: Role'}, type:'SystemIcon', bindable:true },
+        iconNavAudit: { label:{en:'Icon: Audit nav', pl:'Ikona: Audyt'}, type:'SystemIcon', bindable:true },
+        iconNavTemp: { label:{en:'Icon: Temporary nav', pl:'Ikona: Tymczasowe'}, type:'SystemIcon', bindable:true },
         navIconSize: { label:{en:'Nav Icon Size', pl:'Rozmiar ikony nawigacji'}, type:'Length', options:{unitChoices:[{value:'px',label:'px',min:10,max:40}]}, defaultValue:'18px', bindable:true, responsive:true },
         navIconColor: { label:{en:'Nav Icon Color (filter tint)', pl:'Kolor ikony nawigacji'}, type:'Color', defaultValue:'#8a8880', bindable:true, responsive:true },
 
         // === ICONS — GENERAL ===
-        iconSetup: { label:{en:'Icon: Setup/loading screen', pl:'Ikona: Ekran ładowania'}, type:'Icon', bindable:true },
-        iconTempIndicator: { label:{en:'Icon: Temp access indicator', pl:'Ikona: Wskaźnik tymczasowego dostępu'}, type:'Icon', bindable:true },
-        iconClose: { label:{en:'Icon: Close/dismiss', pl:'Ikona: Zamknij'}, type:'Icon', bindable:true },
-        iconEdit: { label:{en:'Icon: Edit', pl:'Ikona: Edytuj'}, type:'Icon', bindable:true },
-        iconDelete: { label:{en:'Icon: Delete', pl:'Ikona: Usuń'}, type:'Icon', bindable:true },
-        iconCheckmark: { label:{en:'Icon: Checkmark', pl:'Ikona: Zaznaczenie'}, type:'Icon', bindable:true },
+        iconSetup: { label:{en:'Icon: Setup/loading screen', pl:'Ikona: Ekran ładowania'}, type:'SystemIcon', bindable:true },
+        iconTempIndicator: { label:{en:'Icon: Temp access indicator', pl:'Ikona: Wskaźnik tymczasowego dostępu'}, type:'SystemIcon', bindable:true },
+        iconClose: { label:{en:'Icon: Close/dismiss', pl:'Ikona: Zamknij'}, type:'SystemIcon', bindable:true },
+        iconEdit: { label:{en:'Icon: Edit', pl:'Ikona: Edytuj'}, type:'SystemIcon', bindable:true },
+        iconDelete: { label:{en:'Icon: Delete', pl:'Ikona: Usuń'}, type:'SystemIcon', bindable:true },
+        iconCheckmark: { label:{en:'Icon: Checkmark', pl:'Ikona: Zaznaczenie'}, type:'SystemIcon', bindable:true },
         iconSize: { label:{en:'General Icon Size', pl:'Rozmiar ikon ogólnych'}, type:'Length', options:{unitChoices:[{value:'px',label:'px',min:8,max:32}]}, defaultValue:'14px', bindable:true, responsive:true },
     }
 };
