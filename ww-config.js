@@ -4,7 +4,7 @@ export default {
         icon: 'settings',
         customStylePropertiesOrder: [
             ['supabaseUrl', 'supabaseAnonKey'],
-            ['showSidebar','labelSidebarTitle','labelSidebarSubtitle','sidebarWidth','sidebarBgColor','sidebarBorderColor','sidebarTopOffset'],
+            ['showSidebar','labelSidebarTitle','labelSidebarSubtitle','sidebarWidth','sidebarBgColor','sidebarBorderColor','sidebarTopOffset','sidebarExtraCss'],
             ['navActiveColor','navActiveBg','navInactiveColor','navHoverBg'],
             ['detailTabActiveColor','detailTabActiveBorder'],
             ['contentPadding','contentMaxWidth'],
@@ -14,7 +14,7 @@ export default {
             ['titleFontSize','titleFontWeight','bodyFontSize','smallFontSize','fontFamily'],
             ['badgeFontSize','badgePadding','badgeBorderRadius'],
             ['inputBgColor','inputBorderColor','inputFocusBorderColor','inputBorderRadius','inputPadding','inputFontSize'],
-            ['selectBgColor','selectTextColor','selectBorderColor','selectFontSize','selectOptionBg','selectOptionText','selectBorderRadius'],
+            ['selectBgColor','selectTextColor','selectBorderColor','selectFontSize','selectOptionBg','selectOptionText','selectBorderRadius','selectHoverBg','selectHoverText'],
             ['btnPrimaryBg','btnPrimaryText','btnPrimaryBorder','btnSecondaryBg','btnSecondaryText','btnSecondaryBorder','btnBorderRadius','btnPadding','btnFontSize'],
             ['btnGhostBg','btnGhostText','btnGhostBorder','btnGhostHoverBorder'],
             ['btnDangerColor','btnDangerBg','btnDangerBorder'],
@@ -40,7 +40,7 @@ export default {
             ['labelColUser','labelColRoles','labelColDepts','labelColClients','labelColStatus'],
             ['labelStatusActive','labelStatusInactive','labelStatusTerminated','labelStatusVacation'],
             ['labelBtnCopy','labelBtnAddRole','labelBtnTempAccess','labelBtnNewRole','labelBtnEditRole','labelBtnEditPerms','labelBtnApply','labelBtnApplyModified'],
-            ['labelBtnExtend','labelBtnRevoke','labelGrantedBy','labelExpiresAt'],
+            ['labelBtnExtend','labelBtnRevoke','labelGrantedBy','labelGrantedAt','labelExpiresAt'],
             ['labelSearch','labelAllRoles','labelNoResults','labelSuperAdmin','labelVacation','labelPrev','labelNext'],
             ['labelTabRoles','labelTabVisibility','labelTabDepts','labelUserDepts','labelAllDeptsAccess','labelAssignedRoles','labelPermissions','labelVisibleClients'],
             ['labelAutoFromRoles','labelNoRoles','labelSuperAdminAccess','labelNoPermissions','labelAllRolesAssigned'],
@@ -72,6 +72,7 @@ export default {
         sidebarBgColor: { label:{en:'Sidebar BG'}, type:'Color', defaultValue:'#161616', bindable:true, responsive:true },
         sidebarBorderColor: { label:{en:'Sidebar Border'}, type:'Color', defaultValue:'#2a2a28', bindable:true, responsive:true },
         sidebarTopOffset: { label:{en:'Sidebar Top Offset', pl:'Offset górny sidebara'}, type:'Length', options:{unitChoices:[{value:'px',label:'px',min:0,max:200}]}, defaultValue:'0px', bindable:true, responsive:true },
+        sidebarExtraCss: { label:{en:'Sidebar Extra CSS (inline style)', pl:'Sidebar: dodatkowy CSS'}, type:'Text', defaultValue:'', bindable:true },
 
         // === NAV ===
         navActiveColor: { label:{en:'Nav Active Text'}, type:'Color', defaultValue:'#6366f1', bindable:true, responsive:true },
@@ -127,6 +128,8 @@ export default {
         selectOptionBg: { label:{en:'Option BG'}, type:'Color', defaultValue:'#1c1c1c', bindable:true },
         selectOptionText: { label:{en:'Option Text'}, type:'Color', defaultValue:'#e8e6e1', bindable:true },
         selectBorderRadius: { label:{en:'Select Radius', pl:'Select: zaokrąglenie'}, type:'Length', options:{unitChoices:[{value:'px',label:'px',min:0,max:20}]}, defaultValue:'8px', bindable:true, responsive:true },
+        selectHoverBg: { label:{en:'Select Hover BG'}, type:'Color', defaultValue:'rgba(99,102,241,0.15)', bindable:true, responsive:true },
+        selectHoverText: { label:{en:'Select Hover Text'}, type:'Color', defaultValue:'#ffffff', bindable:true, responsive:true },
 
         // === BUTTONS ===
         btnPrimaryBg: { label:{en:'Btn BG'}, type:'Color', defaultValue:'#6366f1', bindable:true, responsive:true },
@@ -301,6 +304,7 @@ export default {
         labelBtnExtend: { label:{en:'Btn: Extend access text', pl:'Przycisk: Przedłuż'}, type:'Text', defaultValue:'Przedłuż', bindable:true },
         labelBtnRevoke: { label:{en:'Btn: Revoke access text', pl:'Przycisk: Cofnij'}, type:'Text', defaultValue:'Cofnij', bindable:true },
         labelGrantedBy: { label:{en:'Label: Granted by text', pl:'Etykieta: Nadane przez'}, type:'Text', defaultValue:'Nadane przez', bindable:true },
+        labelGrantedAt: { label:{en:'Label: Granted at text', pl:'Etykieta: Nadano'}, type:'Text', defaultValue:'Nadano', bindable:true },
         labelExpiresAt: { label:{en:'Label: Expires at text', pl:'Etykieta: Wygasa'}, type:'Text', defaultValue:'Wygasa', bindable:true },
 
         // === SEARCH / FILTER ===
