@@ -15,7 +15,7 @@ export default {
             ['badgeFontSize','badgePadding','badgeBorderRadius'],
             ['inputBgColor','inputBorderColor','inputFocusBorderColor','inputBorderRadius','inputPadding','inputFontSize'],
             ['selectBgColor','selectTextColor','selectBorderColor','selectFontSize','selectOptionBg','selectOptionText'],
-            ['btnPrimaryBg','btnPrimaryText','btnSecondaryBg','btnSecondaryText','btnBorderRadius','btnPadding','btnFontSize'],
+            ['btnPrimaryBg','btnPrimaryText','btnPrimaryBorder','btnSecondaryBg','btnSecondaryText','btnSecondaryBorder','btnBorderRadius','btnPadding','btnFontSize'],
             ['btnGhostBg','btnGhostText','btnGhostBorder','btnGhostHoverBorder'],
             ['btnDangerColor','btnDangerBg','btnDangerBorder'],
             ['btnCloseBg','btnCloseText','btnCloseHoverBg','btnCloseHoverText','btnCloseSize','btnCloseBorderRadius'],
@@ -48,7 +48,7 @@ export default {
             ['labelSelectRole','labelSelectDepts'],
             ['labelExtendAccess','labelNewExpiry','labelSave','labelCreate','labelCancel','labelConfirm'],
             ['labelNewRole','labelRoleNamePlaceholder','labelEditRole','labelTemplates','labelSelectTable','labelAddTemplate','labelNoTemplates'],
-            ['labelRolesHint','labelUsersCount'],
+            ['labelRolesHint','labelUsersCount','labelLegendSelect','labelLegendInsert','labelLegendUpdate','labelLegendDelete','labelLegendAll'],
             ['labelEditPermsFor','labelEditPermsHint','labelAddPermission'],
             ['labelAuditAllTables','labelAuditEmailPlaceholder','labelNoAuditEntries'],
             ['labelNoTempGrants'],
@@ -127,8 +127,10 @@ export default {
         // === BUTTONS ===
         btnPrimaryBg: { label:{en:'Btn BG'}, type:'Color', defaultValue:'#6366f1', bindable:true, responsive:true },
         btnPrimaryText: { label:{en:'Btn Text'}, type:'Color', defaultValue:'#ffffff', bindable:true, responsive:true },
+        btnPrimaryBorder: { label:{en:'Btn Border', pl:'Btn: ramka'}, type:'Color', defaultValue:'transparent', bindable:true, responsive:true },
         btnSecondaryBg: { label:{en:'Btn2 BG'}, type:'Color', defaultValue:'#1c1c1c', bindable:true, responsive:true },
         btnSecondaryText: { label:{en:'Btn2 Text'}, type:'Color', defaultValue:'#e8e6e1', bindable:true, responsive:true },
+        btnSecondaryBorder: { label:{en:'Btn2 Border', pl:'Btn2: ramka'}, type:'Color', defaultValue:'#2a2a28', bindable:true, responsive:true },
         btnBorderRadius: { label:{en:'Btn Radius'}, type:'Length', options:{unitChoices:[{value:'px',label:'px',min:0,max:20}]}, defaultValue:'8px', bindable:true, responsive:true },
         btnPadding: { label:{en:'Btn Pad'}, type:'Text', defaultValue:'8px 14px', bindable:true },
         btnFontSize: { label:{en:'Btn Font'}, type:'Length', options:{unitChoices:[{value:'px',label:'px',min:10,max:18}]}, defaultValue:'12px', bindable:true, responsive:true },
@@ -359,6 +361,11 @@ export default {
         labelAddTemplate: { label:{en:'Btn: Add template', pl:'Przycisk: Dodaj szablon'}, type:'Text', defaultValue:'Dodaj szablon', bindable:true },
         labelNoTemplates: { label:{en:'Empty: No templates', pl:'Brak szablonów'}, type:'Text', defaultValue:'Brak szablonów', bindable:true },
         labelRolesHint: { label:{en:'Roles page: Hint text', pl:'Podpowiedź na stronie ról'}, type:'Text', defaultValue:'Zmiana szablonu automatycznie aktualizuje uprawnienia wszystkich użytkowników z tą rolą.', bindable:true },
+        labelLegendSelect: { label:{en:'Legend: SELECT description', pl:'Legenda: SELECT'}, type:'Text', defaultValue:'Odczyt danych z tabeli', bindable:true },
+        labelLegendInsert: { label:{en:'Legend: INSERT description', pl:'Legenda: INSERT'}, type:'Text', defaultValue:'Dodawanie nowych rekordów', bindable:true },
+        labelLegendUpdate: { label:{en:'Legend: UPDATE description', pl:'Legenda: UPDATE'}, type:'Text', defaultValue:'Edycja istniejących rekordów', bindable:true },
+        labelLegendDelete: { label:{en:'Legend: DELETE description', pl:'Legenda: DELETE'}, type:'Text', defaultValue:'Usuwanie rekordów', bindable:true },
+        labelLegendAll: { label:{en:'Legend: ALL description', pl:'Legenda: ALL'}, type:'Text', defaultValue:'Pełny dostęp (wszystkie operacje)', bindable:true },
         labelUsersCount: { label:{en:'Roles: Users count suffix', pl:'Przyrostek: użytk.'}, type:'Text', defaultValue:'użytk.', bindable:true },
 
         // === PERMISSIONS EDITING ===
@@ -383,21 +390,21 @@ export default {
         labelConfirmRevokeTitle: { label:{en:'Confirm: Revoke grant title', pl:'Tytuł: Cofnięcie tymczasowego dostępu'}, type:'Text', defaultValue:'Cofnięcie tymczasowego dostępu', bindable:true },
 
         // === ICONS — NAV ===
-        iconNavDashboard: { label:{en:'Icon: Dashboard nav', pl:'Ikona: Dashboard'}, type:'Image', bindable:true },
-        iconNavUsers: { label:{en:'Icon: Users nav', pl:'Ikona: Użytkownicy'}, type:'Image', bindable:true },
-        iconNavRoles: { label:{en:'Icon: Roles nav', pl:'Ikona: Role'}, type:'Image', bindable:true },
-        iconNavAudit: { label:{en:'Icon: Audit nav', pl:'Ikona: Audyt'}, type:'Image', bindable:true },
-        iconNavTemp: { label:{en:'Icon: Temporary nav', pl:'Ikona: Tymczasowe'}, type:'Image', bindable:true },
+        iconNavDashboard: { label:{en:'Icon: Dashboard nav', pl:'Ikona: Dashboard'}, type:'Icon', bindable:true },
+        iconNavUsers: { label:{en:'Icon: Users nav', pl:'Ikona: Użytkownicy'}, type:'Icon', bindable:true },
+        iconNavRoles: { label:{en:'Icon: Roles nav', pl:'Ikona: Role'}, type:'Icon', bindable:true },
+        iconNavAudit: { label:{en:'Icon: Audit nav', pl:'Ikona: Audyt'}, type:'Icon', bindable:true },
+        iconNavTemp: { label:{en:'Icon: Temporary nav', pl:'Ikona: Tymczasowe'}, type:'Icon', bindable:true },
         navIconSize: { label:{en:'Nav Icon Size', pl:'Rozmiar ikony nawigacji'}, type:'Length', options:{unitChoices:[{value:'px',label:'px',min:10,max:40}]}, defaultValue:'18px', bindable:true, responsive:true },
         navIconColor: { label:{en:'Nav Icon Color (filter tint)', pl:'Kolor ikony nawigacji'}, type:'Color', defaultValue:'#8a8880', bindable:true, responsive:true },
 
         // === ICONS — GENERAL ===
-        iconSetup: { label:{en:'Icon: Setup/loading screen', pl:'Ikona: Ekran ładowania'}, type:'Image', bindable:true },
-        iconTempIndicator: { label:{en:'Icon: Temp access indicator', pl:'Ikona: Wskaźnik tymczasowego dostępu'}, type:'Image', bindable:true },
-        iconClose: { label:{en:'Icon: Close/dismiss', pl:'Ikona: Zamknij'}, type:'Image', bindable:true },
-        iconEdit: { label:{en:'Icon: Edit', pl:'Ikona: Edytuj'}, type:'Image', bindable:true },
-        iconDelete: { label:{en:'Icon: Delete', pl:'Ikona: Usuń'}, type:'Image', bindable:true },
-        iconCheckmark: { label:{en:'Icon: Checkmark', pl:'Ikona: Zaznaczenie'}, type:'Image', bindable:true },
+        iconSetup: { label:{en:'Icon: Setup/loading screen', pl:'Ikona: Ekran ładowania'}, type:'Icon', bindable:true },
+        iconTempIndicator: { label:{en:'Icon: Temp access indicator', pl:'Ikona: Wskaźnik tymczasowego dostępu'}, type:'Icon', bindable:true },
+        iconClose: { label:{en:'Icon: Close/dismiss', pl:'Ikona: Zamknij'}, type:'Icon', bindable:true },
+        iconEdit: { label:{en:'Icon: Edit', pl:'Ikona: Edytuj'}, type:'Icon', bindable:true },
+        iconDelete: { label:{en:'Icon: Delete', pl:'Ikona: Usuń'}, type:'Icon', bindable:true },
+        iconCheckmark: { label:{en:'Icon: Checkmark', pl:'Ikona: Zaznaczenie'}, type:'Icon', bindable:true },
         iconSize: { label:{en:'General Icon Size', pl:'Rozmiar ikon ogólnych'}, type:'Length', options:{unitChoices:[{value:'px',label:'px',min:8,max:32}]}, defaultValue:'14px', bindable:true, responsive:true },
     }
 };
