@@ -52,7 +52,7 @@ export default {
             ['labelNewRole','labelRoleNamePlaceholder','labelEditRole','labelTemplates','labelSelectTable','labelAddTemplate','labelNoTemplates'],
             ['labelRolesHint','labelUsersCount','labelLegendSelect','labelLegendInsert','labelLegendUpdate','labelLegendDelete','labelLegendAll'],
             ['labelEditPermsFor','labelEditPermsHint','labelAddPermission'],
-            ['labelAuditAllTables','labelAuditEmailPlaceholder','labelNoAuditEntries'],
+            ['labelAuditAllTables','labelAuditEmailPlaceholder','labelNoAuditEntries','labelAuditSelectUsers','labelAuditShowing'],
             ['labelNoTempGrants'],
             ['labelConfirmDeleteRole','labelConfirmDeleteRoleTitle','labelConfirmRemoveRole','labelConfirmRemoveRoleTitle','labelConfirmRevoke','labelConfirmRevokeTitle'],
             ['iconNavDashboard','iconNavUsers','iconNavRoles','iconNavAudit','iconNavTemp','navIconSize','navIconColor'],
@@ -392,6 +392,8 @@ export default {
         labelAuditAllTables: { label:{en:'Audit filter: All tables option', pl:'Filtr audytu: Wszystkie'}, type:'Text', defaultValue:'Wszystkie', bindable:true },
         labelAuditEmailPlaceholder: { label:{en:'Audit: Email search placeholder', pl:'Placeholder: Wyszukaj Email...'}, type:'Text', defaultValue:'Wyszukaj Email...', bindable:true },
         labelNoAuditEntries: { label:{en:'Audit: No entries text', pl:'Brak wpisów audytu'}, type:'Text', defaultValue:'Brak wpisów', bindable:true },
+        labelAuditSelectUsers: { label:{en:'Audit: Select users placeholder', pl:'Placeholder: Wybierz pracowników...'}, type:'Text', defaultValue:'Wybierz pracowników...', bindable:true },
+        labelAuditShowing: { label:{en:'Audit: Showing records label', pl:'Etykieta: Wyświetlono'}, type:'Text', defaultValue:'Wyświetlono', bindable:true },
 
         // === TEMP GRANTS ===
         labelNoTempGrants: { label:{en:'Temp: No active grants text', pl:'Brak aktywnych tymczasowych uprawnień'}, type:'Text', defaultValue:'Brak aktywnych tymczasowych uprawnień', bindable:true },
