@@ -16,6 +16,9 @@ export default {
             ['inputBgColor','inputBorderColor','inputFocusBorderColor','inputBorderRadius','inputPadding','inputFontSize'],
             ['selectBgColor','selectTextColor','selectBorderColor','selectFontSize','selectOptionBg','selectOptionText'],
             ['btnPrimaryBg','btnPrimaryText','btnSecondaryBg','btnSecondaryText','btnBorderRadius','btnPadding','btnFontSize'],
+            ['btnGhostBg','btnGhostText','btnGhostBorder','btnGhostHoverBorder'],
+            ['btnDangerColor','btnDangerBg','btnDangerBorder'],
+            ['btnCloseBg','btnCloseText','btnCloseHoverBg','btnCloseHoverText','btnCloseSize','btnCloseBorderRadius'],
             ['tableHeaderBg','tableRowHoverBg','tableRowSelectedBg','tableRowBorderColor'],
             ['statusActiveColor','statusInactiveColor','statusTerminatedColor','statusVacationColor'],
             ['statusActiveTextColor','statusInactiveTextColor','statusTerminatedTextColor','statusVacationTextColor'],
@@ -49,7 +52,9 @@ export default {
             ['labelEditPermsFor','labelEditPermsHint','labelAddPermission'],
             ['labelAuditAllTables','labelAuditEmailPlaceholder','labelNoAuditEntries'],
             ['labelNoTempGrants'],
-            ['labelConfirmDeleteRole','labelConfirmDeleteRoleTitle','labelConfirmRemoveRole','labelConfirmRemoveRoleTitle','labelConfirmRevoke','labelConfirmRevokeTitle']
+            ['labelConfirmDeleteRole','labelConfirmDeleteRoleTitle','labelConfirmRemoveRole','labelConfirmRemoveRoleTitle','labelConfirmRevoke','labelConfirmRevokeTitle'],
+            ['iconNavDashboard','iconNavUsers','iconNavRoles','iconNavAudit','iconNavTemp','navIconSize','navIconColor'],
+            ['iconSetup','iconTempIndicator','iconClose','iconEdit','iconDelete','iconCheckmark','iconSize']
         ]
     },
     properties: {
@@ -127,6 +132,25 @@ export default {
         btnBorderRadius: { label:{en:'Btn Radius'}, type:'Length', options:{unitChoices:[{value:'px',label:'px',min:0,max:20}]}, defaultValue:'8px', bindable:true, responsive:true },
         btnPadding: { label:{en:'Btn Pad'}, type:'Text', defaultValue:'8px 14px', bindable:true },
         btnFontSize: { label:{en:'Btn Font'}, type:'Length', options:{unitChoices:[{value:'px',label:'px',min:10,max:18}]}, defaultValue:'12px', bindable:true, responsive:true },
+
+        // === GHOST BUTTON ===
+        btnGhostBg: { label:{en:'Ghost BG', pl:'Ghost: tło'}, type:'Color', defaultValue:'#1c1c1c', bindable:true, responsive:true },
+        btnGhostText: { label:{en:'Ghost Text', pl:'Ghost: tekst'}, type:'Color', defaultValue:'#8a8880', bindable:true, responsive:true },
+        btnGhostBorder: { label:{en:'Ghost Border', pl:'Ghost: ramka'}, type:'Color', defaultValue:'#2a2a28', bindable:true, responsive:true },
+        btnGhostHoverBorder: { label:{en:'Ghost Hover Border', pl:'Ghost: ramka hover'}, type:'Color', defaultValue:'#6366f1', bindable:true, responsive:true },
+
+        // === DANGER BUTTON ===
+        btnDangerColor: { label:{en:'Danger Text', pl:'Danger: tekst'}, type:'Color', defaultValue:'#ef4444', bindable:true },
+        btnDangerBg: { label:{en:'Danger BG', pl:'Danger: tło'}, type:'Color', defaultValue:'transparent', bindable:true },
+        btnDangerBorder: { label:{en:'Danger Border', pl:'Danger: ramka'}, type:'Color', defaultValue:'#ef4444', bindable:true },
+
+        // === CLOSE BUTTON ===
+        btnCloseBg: { label:{en:'Close BG', pl:'Zamknij: tło'}, type:'Color', defaultValue:'transparent', bindable:true },
+        btnCloseText: { label:{en:'Close Color', pl:'Zamknij: kolor'}, type:'Color', defaultValue:'#8a8880', bindable:true },
+        btnCloseHoverBg: { label:{en:'Close Hover BG', pl:'Zamknij: tło hover'}, type:'Color', defaultValue:'rgba(255,255,255,0.06)', bindable:true },
+        btnCloseHoverText: { label:{en:'Close Hover Color', pl:'Zamknij: kolor hover'}, type:'Color', defaultValue:'#e8e6e1', bindable:true },
+        btnCloseSize: { label:{en:'Close Btn Size', pl:'Zamknij: rozmiar'}, type:'Length', options:{unitChoices:[{value:'px',label:'px',min:20,max:48}]}, defaultValue:'28px', bindable:true, responsive:true },
+        btnCloseBorderRadius: { label:{en:'Close Radius', pl:'Zamknij: zaokrąglenie'}, type:'Length', options:{unitChoices:[{value:'px',label:'px',min:0,max:20}]}, defaultValue:'6px', bindable:true, responsive:true },
 
         // === TABLE ===
         tableHeaderBg: { label:{en:'Header BG'}, type:'Color', defaultValue:'transparent', bindable:true, responsive:true },
@@ -357,5 +381,23 @@ export default {
         labelConfirmRemoveRoleTitle: { label:{en:'Confirm: Remove role title', pl:'Tytuł: Usunięcie roli użytkownikowi'}, type:'Text', defaultValue:'Usunięcie roli użytkownikowi', bindable:true },
         labelConfirmRevoke: { label:{en:'Confirm: Revoke grant message', pl:'Komunikat cofnięcia dostępu'}, type:'Text', defaultValue:'Cofnąć tymczasowy dostęp?', bindable:true },
         labelConfirmRevokeTitle: { label:{en:'Confirm: Revoke grant title', pl:'Tytuł: Cofnięcie tymczasowego dostępu'}, type:'Text', defaultValue:'Cofnięcie tymczasowego dostępu', bindable:true },
+
+        // === ICONS — NAV ===
+        iconNavDashboard: { label:{en:'Icon: Dashboard nav', pl:'Ikona: Dashboard'}, type:'Image', bindable:true },
+        iconNavUsers: { label:{en:'Icon: Users nav', pl:'Ikona: Użytkownicy'}, type:'Image', bindable:true },
+        iconNavRoles: { label:{en:'Icon: Roles nav', pl:'Ikona: Role'}, type:'Image', bindable:true },
+        iconNavAudit: { label:{en:'Icon: Audit nav', pl:'Ikona: Audyt'}, type:'Image', bindable:true },
+        iconNavTemp: { label:{en:'Icon: Temporary nav', pl:'Ikona: Tymczasowe'}, type:'Image', bindable:true },
+        navIconSize: { label:{en:'Nav Icon Size', pl:'Rozmiar ikony nawigacji'}, type:'Length', options:{unitChoices:[{value:'px',label:'px',min:10,max:40}]}, defaultValue:'18px', bindable:true, responsive:true },
+        navIconColor: { label:{en:'Nav Icon Color (filter tint)', pl:'Kolor ikony nawigacji'}, type:'Color', defaultValue:'#8a8880', bindable:true, responsive:true },
+
+        // === ICONS — GENERAL ===
+        iconSetup: { label:{en:'Icon: Setup/loading screen', pl:'Ikona: Ekran ładowania'}, type:'Image', bindable:true },
+        iconTempIndicator: { label:{en:'Icon: Temp access indicator', pl:'Ikona: Wskaźnik tymczasowego dostępu'}, type:'Image', bindable:true },
+        iconClose: { label:{en:'Icon: Close/dismiss', pl:'Ikona: Zamknij'}, type:'Image', bindable:true },
+        iconEdit: { label:{en:'Icon: Edit', pl:'Ikona: Edytuj'}, type:'Image', bindable:true },
+        iconDelete: { label:{en:'Icon: Delete', pl:'Ikona: Usuń'}, type:'Image', bindable:true },
+        iconCheckmark: { label:{en:'Icon: Checkmark', pl:'Ikona: Zaznaczenie'}, type:'Image', bindable:true },
+        iconSize: { label:{en:'General Icon Size', pl:'Rozmiar ikon ogólnych'}, type:'Length', options:{unitChoices:[{value:'px',label:'px',min:8,max:32}]}, defaultValue:'14px', bindable:true, responsive:true },
     }
 };
