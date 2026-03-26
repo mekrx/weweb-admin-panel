@@ -28,7 +28,7 @@ export default {
             ['overlayBgColor','panelWidth','panelBgColor'],
             ['modalBgColor','modalBorderRadius','modalMaxWidth','modalPadding'],
             ['toastSuccessBg','toastSuccessText','toastErrorBg','toastErrorText','toastInfoBg','toastInfoText'],
-            ['chartBg','chartBorder','chartLineColor','chartLineWidth','chartDotColor','chartDotSize','chartGridColor','chartLabelColor','chartHeight','chartAreaOpacity'],
+            ['chartBg','chartBorder','chartLineColor','chartLineWidth','chartDotColor','chartDotSize','chartGridColor','chartLabelColor','chartHeight','chartAreaOpacity','dateIconFilter'],
             ['diffPositiveColor','diffNegativeColor','diffNeutralColor'],
             ['animationDuration','animationEasing'],
             ['spacingXs','spacingSm','spacingMd','spacingLg','spacingXl'],
@@ -410,6 +410,7 @@ export default {
         chartLabelColor: { label:{en:'Chart Label Color'}, type:'Color', defaultValue:'#8a8880', bindable:true },
         chartHeight: { label:{en:'Chart Height'}, type:'Length', options:{unitChoices:[{value:'px',label:'px',min:100,max:500}]}, defaultValue:'200px', bindable:true, responsive:true },
         chartAreaOpacity: { label:{en:'Chart Area Opacity'}, type:'Number', options:{min:0,max:1,step:0.05}, defaultValue:0.15, bindable:true },
+        dateIconFilter: { label:{en:'Date Icon Filter (CSS filter)'}, type:'Text', defaultValue:'invert(0.6)', bindable:true },
 
         // === DIFF COLORS ===
         diffPositiveColor: { label:{en:'Diff Positive', pl:'Różnica: wzrost'}, type:'Color', defaultValue:'#22c55e', bindable:true },
