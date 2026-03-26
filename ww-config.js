@@ -23,18 +23,20 @@ export default {
             ['statusActiveColor','statusInactiveColor','statusTerminatedColor','statusVacationColor'],
             ['statusActiveTextColor','statusInactiveTextColor','statusTerminatedTextColor','statusVacationTextColor'],
             ['actionActiveBg','actionActiveText','actionActiveBorder'],
-            ['odzActiveBg','odzActiveBorder','odzActiveText','odzInactiveBg','odzInactiveBorder','odzInactiveText','odzTempBorder','odzTempBg','odzTempText','odzIndicatorOn','odzIndicatorOff','tempIndicatorColor','tempRoleBorder'],
+            ['odzActiveBg','odzActiveBorder','odzActiveText','odzInactiveBg','odzInactiveBorder','odzInactiveText','odzTempBorder','odzTempBg','odzTempText','odzTempIndicator','odzIndicatorOn','odzIndicatorOff','tempIndicatorColor','tempRoleBorder'],
             ['labelRoleColor'],
             ['overlayBgColor','panelWidth','panelBgColor'],
             ['modalBgColor','modalBorderRadius','modalMaxWidth','modalPadding'],
             ['toastSuccessBg','toastSuccessText','toastErrorBg','toastErrorText','toastInfoBg','toastInfoText'],
+            ['chartBg','chartBorder','chartLineColor','chartLineWidth','chartDotColor','chartDotSize','chartGridColor','chartLabelColor','chartHeight','chartAreaOpacity'],
+            ['diffPositiveColor','diffNegativeColor','diffNeutralColor'],
             ['animationDuration','animationEasing'],
             ['spacingXs','spacingSm','spacingMd','spacingLg','spacingXl'],
             ['labelDashboard','labelUsers','labelRoles','labelAudit','labelTemp'],
             ['labelStatManagers','labelStatClients','labelStatVacation','labelStatPending','labelStatChanges','labelStatTempGrants','labelStatRolesCount','labelStatDepts'],
             ['showStatManagers','showStatClients','showStatVacation','showStatPending','showStatChanges','showStatTempGrants','showStatRolesCount','showStatDepts'],
             ['orderStatManagers','orderStatClients','orderStatVacation','orderStatPending','orderStatChanges','orderStatTempGrants','orderStatRolesCount','orderStatDepts'],
-            ['labelRolesDistribution','labelDepartments'],
+            ['labelRolesDistribution','labelDepartments','labelClientsChart'],
             ['labelColUser','labelColRoles','labelColDepts','labelColClients','labelColStatus'],
             ['labelStatusActive','labelStatusInactive','labelStatusTerminated','labelStatusVacation'],
             ['labelBtnCopy','labelBtnAddRole','labelBtnTempAccess','labelBtnNewRole','labelBtnEditRole','labelBtnEditPerms','labelBtnApply','labelBtnApplyModified'],
@@ -191,6 +193,7 @@ export default {
         odzTempText: { label:{en:'Dept Temp Text', pl:'Oddział tymczasowy: tekst'}, type:'Color', defaultValue:'#f59e0b', bindable:true },
         odzIndicatorOn: { label:{en:'Dept Indicator On', pl:'Wskaźnik oddziału: aktywny'}, type:'Color', defaultValue:'#6366f1', bindable:true },
         odzIndicatorOff: { label:{en:'Dept Indicator Off', pl:'Wskaźnik oddziału: nieaktywny'}, type:'Color', defaultValue:'#333333', bindable:true },
+        odzTempIndicator: { label:{en:'Dept Temp Indicator', pl:'Oddział tymczasowy: wskaźnik'}, type:'Color', defaultValue:'#f59e0b', bindable:true },
         tempIndicatorColor: { label:{en:'Temp Icon Color', pl:'Kolor ikony tymczasowej'}, type:'Color', defaultValue:'#f59e0b', bindable:true },
         tempRoleBorder: { label:{en:'Temp Role Border', pl:'Tymczasowa rola: ramka'}, type:'Color', defaultValue:'#f59e0b', bindable:true },
 
@@ -271,6 +274,7 @@ export default {
         statDeptsColor: { label:{en:'Stat color: Departments', pl:'Kolor paska: Oddziały'}, type:'Color', defaultValue:'#0ea5e9', bindable:true },
         labelRolesDistribution: { label:{en:'Section: Roles Distribution'}, type:'Text', defaultValue:'Rozkład ról', bindable:true },
         labelDepartments: { label:{en:'Section: Departments'}, type:'Text', defaultValue:'Oddziały', bindable:true },
+        labelClientsChart: { label:{en:'Section: Clients Chart'}, type:'Text', defaultValue:'Aktywni klienci — wykres', bindable:true },
 
         // === TABLE COLUMN LABELS ===
         labelColUser: { label:{en:'Col: User header text', pl:'Nagłówek kolumny: Użytkownik'}, type:'Text', defaultValue:'UŻYTKOWNIK', bindable:true },
@@ -394,6 +398,23 @@ export default {
         labelConfirmRemoveRoleTitle: { label:{en:'Confirm: Remove role title', pl:'Tytuł: Usunięcie roli użytkownikowi'}, type:'Text', defaultValue:'Usunięcie roli użytkownikowi', bindable:true },
         labelConfirmRevoke: { label:{en:'Confirm: Revoke grant message', pl:'Komunikat cofnięcia dostępu'}, type:'Text', defaultValue:'Cofnąć tymczasowy dostęp?', bindable:true },
         labelConfirmRevokeTitle: { label:{en:'Confirm: Revoke grant title', pl:'Tytuł: Cofnięcie tymczasowego dostępu'}, type:'Text', defaultValue:'Cofnięcie tymczasowego dostępu', bindable:true },
+
+        // === CHART ===
+        chartBg: { label:{en:'Chart BG'}, type:'Color', defaultValue:'transparent', bindable:true },
+        chartBorder: { label:{en:'Chart Border'}, type:'Color', defaultValue:'#2a2a28', bindable:true },
+        chartLineColor: { label:{en:'Chart Line Color'}, type:'Color', defaultValue:'#6366f1', bindable:true },
+        chartLineWidth: { label:{en:'Chart Line Width'}, type:'Length', options:{unitChoices:[{value:'px',label:'px',min:1,max:5}]}, defaultValue:'2px', bindable:true },
+        chartDotColor: { label:{en:'Chart Dot Color'}, type:'Color', defaultValue:'#818cf8', bindable:true },
+        chartDotSize: { label:{en:'Chart Dot Size'}, type:'Length', options:{unitChoices:[{value:'px',label:'px',min:2,max:8}]}, defaultValue:'4px', bindable:true },
+        chartGridColor: { label:{en:'Chart Grid Color'}, type:'Color', defaultValue:'rgba(255,255,255,0.05)', bindable:true },
+        chartLabelColor: { label:{en:'Chart Label Color'}, type:'Color', defaultValue:'#8a8880', bindable:true },
+        chartHeight: { label:{en:'Chart Height'}, type:'Length', options:{unitChoices:[{value:'px',label:'px',min:100,max:500}]}, defaultValue:'200px', bindable:true, responsive:true },
+        chartAreaOpacity: { label:{en:'Chart Area Opacity'}, type:'Number', options:{min:0,max:1,step:0.05}, defaultValue:0.15, bindable:true },
+
+        // === DIFF COLORS ===
+        diffPositiveColor: { label:{en:'Diff Positive', pl:'Różnica: wzrost'}, type:'Color', defaultValue:'#22c55e', bindable:true },
+        diffNegativeColor: { label:{en:'Diff Negative', pl:'Różnica: spadek'}, type:'Color', defaultValue:'#ef4444', bindable:true },
+        diffNeutralColor: { label:{en:'Diff Neutral', pl:'Różnica: bez zmian'}, type:'Color', defaultValue:'#8a8880', bindable:true },
 
         // === ICONS — NAV ===
         iconNavDashboard: { label:{en:'Icon: Dashboard nav', pl:'Ikona: Dashboard'}, type:'SystemIcon', bindable:true },
