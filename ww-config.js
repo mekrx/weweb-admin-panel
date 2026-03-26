@@ -4,7 +4,7 @@ export default {
         icon: 'settings',
         customStylePropertiesOrder: [
             ['supabaseUrl', 'supabaseAnonKey'],
-            ['showSidebar','labelSidebarTitle','labelSidebarSubtitle','sidebarWidth','sidebarBgColor','sidebarBorderColor','sidebarTopOffset','sidebarExtraCss'],
+            ['showSidebar','labelSidebarTitle','labelSidebarSubtitle','sidebarWidth','sidebarBgColor','sidebarBorderColor','sidebarTopOffset','sidebarZIndex'],
             ['navActiveColor','navActiveBg','navInactiveColor','navHoverBg'],
             ['detailTabActiveColor','detailTabActiveBorder'],
             ['contentPadding','contentMaxWidth'],
@@ -36,7 +36,7 @@ export default {
             ['labelStatManagers','labelStatClients','labelStatVacation','labelStatPending','labelStatChanges','labelStatTempGrants','labelStatRolesCount','labelStatDepts'],
             ['showStatManagers','showStatClients','showStatVacation','showStatPending','showStatChanges','showStatTempGrants','showStatRolesCount','showStatDepts'],
             ['orderStatManagers','orderStatClients','orderStatVacation','orderStatPending','orderStatChanges','orderStatTempGrants','orderStatRolesCount','orderStatDepts'],
-            ['labelRolesDistribution','labelDepartments','labelClientsChart'],
+            ['labelRolesDistribution','labelDepartments','labelClientsChart','labelDiffPeriod'],
             ['labelColUser','labelColRoles','labelColDepts','labelColClients','labelColStatus'],
             ['labelStatusActive','labelStatusInactive','labelStatusTerminated','labelStatusVacation'],
             ['labelBtnCopy','labelBtnAddRole','labelBtnTempAccess','labelBtnNewRole','labelBtnEditRole','labelBtnEditPerms','labelBtnApply','labelBtnApplyModified'],
@@ -72,7 +72,7 @@ export default {
         sidebarBgColor: { label:{en:'Sidebar BG'}, type:'Color', defaultValue:'#161616', bindable:true, responsive:true },
         sidebarBorderColor: { label:{en:'Sidebar Border'}, type:'Color', defaultValue:'#2a2a28', bindable:true, responsive:true },
         sidebarTopOffset: { label:{en:'Sidebar Top Offset', pl:'Offset górny sidebara'}, type:'Length', options:{unitChoices:[{value:'px',label:'px',min:0,max:200}]}, defaultValue:'0px', bindable:true, responsive:true },
-        sidebarExtraCss: { label:{en:'Sidebar Extra CSS (inline style)', pl:'Sidebar: dodatkowy CSS'}, type:'Text', defaultValue:'', bindable:true },
+        sidebarZIndex: { label:{en:'Sidebar Z-Index'}, type:'Number', options:{min:0,max:9999,step:1}, defaultValue:0, bindable:true },
 
         // === NAV ===
         navActiveColor: { label:{en:'Nav Active Text'}, type:'Color', defaultValue:'#6366f1', bindable:true, responsive:true },
@@ -278,6 +278,7 @@ export default {
         labelRolesDistribution: { label:{en:'Section: Roles Distribution'}, type:'Text', defaultValue:'Rozkład ról', bindable:true },
         labelDepartments: { label:{en:'Section: Departments'}, type:'Text', defaultValue:'Oddziały', bindable:true },
         labelClientsChart: { label:{en:'Section: Clients Chart'}, type:'Text', defaultValue:'Aktywni klienci — wykres', bindable:true },
+        labelDiffPeriod: { label:{en:'Label: Diff period hint'}, type:'Text', defaultValue:'разница за 30 дн.', bindable:true },
 
         // === TABLE COLUMN LABELS ===
         labelColUser: { label:{en:'Col: User header text', pl:'Nagłówek kolumny: Użytkownik'}, type:'Text', defaultValue:'UŻYTKOWNIK', bindable:true },
