@@ -12,7 +12,7 @@ export default {
             ['borderColor','borderLightColor'],
             ['textColor','textMutedColor','textHintColor'],
             ['titleFontSize','titleFontWeight','bodyFontSize','smallFontSize','fontFamily'],
-            ['badgeFontSize','badgePadding','badgeBorderRadius'],
+            ['badgeFontSize','badgePadding','badgeBorderRadius','tableRoleBadgeSize','tableDeptBadgeSize'],
             ['inputBgColor','inputBorderColor','inputFocusBorderColor','inputBorderRadius','inputPadding','inputFontSize'],
             ['selectBgColor','selectTextColor','selectBorderColor','selectFontSize','selectOptionBg','selectOptionText','selectBorderRadius','selectHoverBg','selectHoverText'],
             ['btnPrimaryBg','btnPrimaryText','btnPrimaryBorder','btnSecondaryBg','btnSecondaryText','btnSecondaryBorder','btnBorderRadius','btnPadding','btnFontSize'],
@@ -111,6 +111,8 @@ export default {
         badgeFontSize: { label:{en:'Badge Size'}, type:'Length', options:{unitChoices:[{value:'px',label:'px',min:8,max:16}]}, defaultValue:'11px', bindable:true, responsive:true },
         badgePadding: { label:{en:'Badge Pad'}, type:'Text', defaultValue:'3px 10px', bindable:true },
         badgeBorderRadius: { label:{en:'Badge Radius'}, type:'Length', options:{unitChoices:[{value:'px',label:'px',min:0,max:30}]}, defaultValue:'20px', bindable:true, responsive:true },
+        tableRoleBadgeSize: { label:{en:'Table Role Size'}, type:'Length', options:{unitChoices:[{value:'px',label:'px',min:8,max:16}]}, defaultValue:'11px', bindable:true, responsive:true },
+        tableDeptBadgeSize: { label:{en:'Table Dept Size'}, type:'Length', options:{unitChoices:[{value:'px',label:'px',min:8,max:16}]}, defaultValue:'10px', bindable:true, responsive:true },
 
         // === INPUTS ===
         inputBgColor: { label:{en:'Input BG'}, type:'Color', defaultValue:'#1c1c1c', bindable:true, responsive:true },
@@ -128,8 +130,8 @@ export default {
         selectOptionBg: { label:{en:'Option BG'}, type:'Color', defaultValue:'#1c1c1c', bindable:true },
         selectOptionText: { label:{en:'Option Text'}, type:'Color', defaultValue:'#e8e6e1', bindable:true },
         selectBorderRadius: { label:{en:'Select Radius', pl:'Select: zaokrąglenie'}, type:'Length', options:{unitChoices:[{value:'px',label:'px',min:0,max:20}]}, defaultValue:'8px', bindable:true, responsive:true },
-        selectHoverBg: { label:{en:'Select Hover BG'}, type:'Color', defaultValue:'rgba(99,102,241,0.15)', bindable:true, responsive:true },
-        selectHoverText: { label:{en:'Select Hover Text'}, type:'Color', defaultValue:'#ffffff', bindable:true, responsive:true },
+        selectHoverBg: { label:{en:'Select Active BG'}, type:'Color', defaultValue:'rgba(99,102,241,0.15)', bindable:true, responsive:true },
+        selectHoverText: { label:{en:'Select Active Text'}, type:'Color', defaultValue:'#ffffff', bindable:true, responsive:true },
 
         // === BUTTONS ===
         btnPrimaryBg: { label:{en:'Btn BG'}, type:'Color', defaultValue:'#6366f1', bindable:true, responsive:true },
