@@ -221,6 +221,16 @@ export default {
         orderStatTempGrants: { label:{en:'Order: Temp Grants', pl:'Kolejność: Tymczasowe'}, type:'Number', options:{min:1,max:8,step:1}, defaultValue:6, bindable:true },
         orderStatRolesCount: { label:{en:'Order: Roles Count', pl:'Kolejność: Role'}, type:'Number', options:{min:1,max:8,step:1}, defaultValue:7, bindable:true },
         orderStatDepts: { label:{en:'Order: Departments', pl:'Kolejność: Oddziały'}, type:'Number', options:{min:1,max:8,step:1}, defaultValue:8, bindable:true },
+
+        // === STAT CARD ACCENT COLORS ===
+        statManagersColor: { label:{en:'Stat color: Managers', pl:'Kolor paska: Menedżerowie'}, type:'Color', defaultValue:'#22c55e', bindable:true },
+        statClientsColor: { label:{en:'Stat color: Clients', pl:'Kolor paska: Klienci'}, type:'Color', defaultValue:'#6366f1', bindable:true },
+        statVacationColor: { label:{en:'Stat color: Vacation', pl:'Kolor paska: Urlopy'}, type:'Color', defaultValue:'#eab308', bindable:true },
+        statPendingColor: { label:{en:'Stat color: Pending', pl:'Kolor paska: Oczekujące'}, type:'Color', defaultValue:'#ef4444', bindable:true },
+        statChangesColor: { label:{en:'Stat color: Changes', pl:'Kolor paska: Zmiany'}, type:'Color', defaultValue:'#8b5cf6', bindable:true },
+        statTempColor: { label:{en:'Stat color: Temp Grants', pl:'Kolor paska: Tymczasowe'}, type:'Color', defaultValue:'#f59e0b', bindable:true },
+        statRolesColor: { label:{en:'Stat color: Roles', pl:'Kolor paska: Role'}, type:'Color', defaultValue:'#6366f1', bindable:true },
+        statDeptsColor: { label:{en:'Stat color: Departments', pl:'Kolor paska: Oddziały'}, type:'Color', defaultValue:'#0ea5e9', bindable:true },
         labelRolesDistribution: { label:{en:'Section: Roles Distribution'}, type:'Text', defaultValue:'Rozkład ról', bindable:true },
         labelDepartments: { label:{en:'Section: Departments'}, type:'Text', defaultValue:'Oddziały', bindable:true },
 

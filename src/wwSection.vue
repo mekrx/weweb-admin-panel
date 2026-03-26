@@ -76,11 +76,10 @@
             </div>
             <div class="card no-pad">
               <div class="table-header">
-                <span class="col-user">{{L('labelColUser')}}</span>
-                <span class="col-roles">{{L('labelColRoles')}}</span>
-                <span class="col-dept">{{L('labelColDept')}}</span>
-                <span class="col-clients">{{L('labelColClients')}}</span>
-                <span class="col-status">{{L('labelColStatus')}}</span>
+                <span class="col-user">{{L('labelColUser')||'UŻYTKOWNIK'}}</span>
+                <span class="col-roles">{{L('labelColRoles')||'ROLE'}}</span>
+                <span class="col-clients">{{L('labelColClients')||'KLIENTÓW'}}</span>
+                <span class="col-status">{{L('labelColStatus')||'STATUS'}}</span>
               </div>
               <div
                 v-for="u in paginatedUsers" :key="u.id"
@@ -90,23 +89,23 @@
                 <div class="col-user">
                   <div class="user-name">
                     {{u.full_name}}
-                    <span v-if="u.is_super_admin" class="badge-sa">{{L('labelSuperAdmin')}}</span>
-                    <span v-if="u.on_vacation" class="badge-vacation">{{L('labelVacation')}}</span>
+                    <span v-if="u.is_super_admin" class="badge-sa">{{L('labelSuperAdmin')||'SuperAdmin'}}</span>
+                    <span v-if="u.on_vacation" class="badge-vacation">{{L('labelVacation')||'URLOP'}}</span>
                   </div>
                   <div class="user-email text-muted text-sm">{{u.email}}</div>
+                  <div v-if="u.oddzial" class="user-dept text-muted text-sm">{{u.oddzial}}</div>
                 </div>
                 <div class="col-roles">
                   <span v-for="r in uniqueRoles(u).slice(0,3)" :key="r" class="role-badge-sm" :style="roleBadgeStyle(r)">{{r}}</span>
                   <span v-if="uniqueRoles(u).length>3" class="text-muted text-sm">+{{uniqueRoles(u).length-3}}</span>
                 </div>
-                <div class="col-dept text-muted ellipsis">{{truncate(u.oddzial,16)||'—'}}</div>
                 <div class="col-clients mono">{{u.visible_clients_count}}</div>
                 <div class="col-status">
                   <span class="status-dot" :class="'status-'+u.status"></span>
                   <span class="status-text text-sm" :class="'status-text-'+u.status">{{statusLabel(u.status)}}</span>
                 </div>
               </div>
-              <div v-if="filteredUsers.length===0" class="empty-state">{{L('labelNoResults')}}</div>
+              <div v-if="filteredUsers.length===0" class="empty-state">{{L('labelNoResults')||'Brak wyników'}}</div>
             </div>
             <!-- PAGINATION -->
             <div v-if="totalPages>1" class="pagination">
@@ -688,6 +687,14 @@ export default {
         '--nav-active-bg': c.navActiveBg || 'rgba(99,102,241,0.12)',
         '--nav-inactive': c.navInactiveColor || '#8a8880',
         '--nav-hover-bg': c.navHoverBg || 'rgba(99,102,241,0.06)',
+        '--stat-managers-color': c.statManagersColor || '#22c55e',
+        '--stat-clients-color': c.statClientsColor || '#6366f1',
+        '--stat-vacation-color': c.statVacationColor || '#eab308',
+        '--stat-pending-color': c.statPendingColor || '#ef4444',
+        '--stat-changes-color': c.statChangesColor || '#8b5cf6',
+        '--stat-temp-color': c.statTempColor || '#f59e0b',
+        '--stat-roles-color': c.statRolesColor || '#6366f1',
+        '--stat-depts-color': c.statDeptsColor || '#0ea5e9',
         '--detail-tab-active-color': c.detailTabActiveColor || c.navActiveColor || '#6366f1',
         '--detail-tab-active-border': c.detailTabActiveBorder || c.navActiveColor || '#6366f1',
         '--action-active-bg': c.actionActiveBg || '#6366f1',
@@ -724,14 +731,14 @@ export default {
       const s = this.stats;
       const c = this.content;
       const all = [
-        { id: 'managers', v: s.total_managers || 0, l: this.L('labelStatManagers') || 'Aktywni menedżerowie', c: 'var(--status-active)', show: c.showStatManagers !== false, order: c.orderStatManagers ?? 1 },
-        { id: 'clients', v: s.active_clients || 0, l: this.L('labelStatClients') || 'Aktywni klienci', c: 'var(--accent)', show: c.showStatClients !== false, order: c.orderStatClients ?? 2 },
-        { id: 'vacation', v: s.on_vacation_now || 0, l: this.L('labelStatVacation') || 'Na urlopie', c: 'var(--status-inactive)', show: c.showStatVacation !== false, order: c.orderStatVacation ?? 3 },
-        { id: 'pending', v: s.pending_vacations || 0, l: this.L('labelStatPending') || 'Oczekujące urlopy', c: 'var(--status-terminated)', show: c.showStatPending !== false, order: c.orderStatPending ?? 4 },
-        { id: 'changes', v: s.recent_changes_24h || 0, l: this.L('labelStatChanges') || 'Zmiany 24h', c: '#8b5cf6', show: c.showStatChanges !== false, order: c.orderStatChanges ?? 5 },
-        { id: 'temp', v: s.active_temp_grants || 0, l: this.L('labelStatTempGrants') || 'Aktywne tymcz. dostępy', c: '#f59e0b', show: c.showStatTempGrants === true, order: c.orderStatTempGrants ?? 6 },
-        { id: 'roles_count', v: s.total_roles || this.allRoles.length || 0, l: this.L('labelStatRolesCount') || 'Zdefiniowane role', c: '#6366f1', show: c.showStatRolesCount === true, order: c.orderStatRolesCount ?? 7 },
-        { id: 'depts', v: s.total_departments || this.allOdz.length || 0, l: this.L('labelStatDepts') || 'Oddziały', c: '#0ea5e9', show: c.showStatDepts === true, order: c.orderStatDepts ?? 8 },
+        { id: 'managers', v: s.total_managers || 0, l: this.L('labelStatManagers'), c: 'var(--stat-managers-color)', show: c.showStatManagers !== false, order: c.orderStatManagers ?? 1 },
+        { id: 'clients', v: s.active_clients || 0, l: this.L('labelStatClients'), c: 'var(--stat-clients-color)', show: c.showStatClients !== false, order: c.orderStatClients ?? 2 },
+        { id: 'vacation', v: s.on_vacation_now || 0, l: this.L('labelStatVacation'), c: 'var(--stat-vacation-color)', show: c.showStatVacation !== false, order: c.orderStatVacation ?? 3 },
+        { id: 'pending', v: s.pending_vacations || 0, l: this.L('labelStatPending'), c: 'var(--stat-pending-color)', show: c.showStatPending !== false, order: c.orderStatPending ?? 4 },
+        { id: 'changes', v: s.recent_changes_24h || 0, l: this.L('labelStatChanges'), c: 'var(--stat-changes-color)', show: c.showStatChanges !== false, order: c.orderStatChanges ?? 5 },
+        { id: 'temp', v: s.active_temp_grants || 0, l: this.L('labelStatTempGrants'), c: 'var(--stat-temp-color)', show: c.showStatTempGrants === true, order: c.orderStatTempGrants ?? 6 },
+        { id: 'roles_count', v: s.total_roles || this.allRoles.length || 0, l: this.L('labelStatRolesCount'), c: 'var(--stat-roles-color)', show: c.showStatRolesCount === true, order: c.orderStatRolesCount ?? 7 },
+        { id: 'depts', v: s.total_departments || this.allOdz.length || 0, l: this.L('labelStatDepts'), c: 'var(--stat-depts-color)', show: c.showStatDepts === true, order: c.orderStatDepts ?? 8 },
       ];
       return all.filter(x => x.show).sort((a, b) => a.order - b.order);
     },
@@ -833,7 +840,57 @@ export default {
   },
 
   methods: {
-    L(k) { return this.content[k] || ''; },
+    L(k) {
+      if (this.content[k]) return this.content[k];
+      // Fallback defaults for all label properties
+      const defaults = {
+        labelDashboard:'Dashboard', labelUsers:'Użytkownicy', labelRoles:'Role', labelAudit:'Audyt', labelTemp:'Tymczasowe',
+        labelStatManagers:'Aktywni menedżerowie', labelStatClients:'Aktywni klienci', labelStatVacation:'Na urlopie',
+        labelStatPending:'Oczekujące urlopy', labelStatChanges:'Zmiany 24h', labelStatTempGrants:'Aktywne tymcz. dostępy',
+        labelStatRolesCount:'Zdefiniowane role', labelStatDepts:'Oddziały',
+        labelRolesDistribution:'Rozkład ról', labelDepartments:'Oddziały',
+        labelColUser:'UŻYTKOWNIK', labelColRoles:'ROLE', labelColDept:'ODDZIAŁ', labelColClients:'KLIENTÓW', labelColStatus:'STATUS',
+        labelStatusActive:'Aktywny', labelStatusInactive:'Nieaktywny', labelStatusTerminated:'Zwolniony', labelStatusVacation:'Urlop',
+        labelBtnCopy:'Kopiuj uprawnienia na...', labelBtnAddRole:'+ Dodaj rolę', labelBtnTempAccess:'⏱ Tymczasowy dostęp',
+        labelBtnNewRole:'+ Nowa rola', labelBtnEditRole:'Edytuj', labelBtnEditPerms:'Edytuj',
+        labelBtnApply:'Zastosuj kopię', labelBtnApplyModified:'Zastosuj ze zmianami',
+        labelBtnExtend:'Przedłuż', labelBtnRevoke:'Cofnij',
+        labelGrantedBy:'Nadane przez', labelExpiresAt:'Wygasa',
+        labelSearch:'Szukaj po nazwisku lub email...', labelAllRoles:'Wszystkie role', labelNoResults:'Brak wyników',
+        labelSuperAdmin:'SuperAdmin', labelVacation:'URLOP', labelPrev:'Wstecz', labelNext:'Dalej',
+        labelTabRoles:'Role i uprawnienia', labelTabVisibility:'Widoczność klientów', labelTabDepts:'Oddziały',
+        labelAssignedRoles:'Wydane role', labelPermissions:'Uprawnienia', labelVisibleClients:'widocznych klientów',
+        labelAutoFromRoles:'auto z ról', labelNoRoles:'Brak ról',
+        labelSuperAdminAccess:'Super admin — pełny dostęp', labelNoPermissions:'Brak uprawnień',
+        labelAllRolesAssigned:'Wszystkie role przypisane',
+        labelAddRoleFor:'Dodaj rolę —', labelDept:'Oddział', labelUserDepts:'Dostępne oddziały',
+        labelCopyFrom:'Kopiuj z', labelSelectTarget:'Wybierz cel', labelReviewCopy:'Sprawdź i dostosuj',
+        labelChangeTarget:'Zmień cel', labelChanged:'zmienione', labelSummary:'Podsumowanie',
+        labelTarget:'Cel', labelNone:'brak', labelOf:'z', labelSelectAll:'Zaznacz wszystkie', labelClearAll:'Wyczyść',
+        labelRoles:'Role',
+        labelTempAccessFor:'Tymczasowy dostęp —', labelTempType:'Typ', labelTempRole:'Rola', labelTempDept:'Oddział',
+        labelTempExpires:'Wygasa (czas polski)', labelTempReason:'Powód (opcjonalnie)',
+        labelTempReasonPlaceholder:'np. zastępstwo za...', labelTempApply:'Nadaj tymczasowy dostęp',
+        labelSelectRole:'Wybierz rolę', labelSelectDepts:'Wybierz oddziały',
+        labelExtendAccess:'Przedłuż dostęp', labelNewExpiry:'Nowa data wygaśnięcia',
+        labelSave:'Zapisz', labelCreate:'Utwórz', labelCancel:'Anuluj', labelConfirm:'Potwierdź',
+        labelNewRole:'Nowa rola', labelRoleNamePlaceholder:'Nazwa roli...',
+        labelEditRole:'Edycja roli', labelTemplates:'Szablony uprawnień',
+        labelSelectTable:'Wybierz tabelę', labelAddTemplate:'Dodaj szablon', labelNoTemplates:'Brak szablonów',
+        labelRolesHint:'Zmiana szablonu automatycznie aktualizuje uprawnienia wszystkich użytkowników z tą rolą.',
+        labelUsersCount:'użytk.', labelRoleColor:'Kolor roli',
+        labelEditPermsFor:'Edycja uprawnień —', labelEditPermsHint:'Ręczna zmiana uprawnień nadpisuje automatyczne uprawnienia z ról.',
+        labelAddPermission:'Dodaj uprawnienie',
+        labelAuditAllTables:'Wszystkie', labelAuditEmailPlaceholder:'Wyszukaj Email...', labelNoAuditEntries:'Brak wpisów',
+        labelNoTempGrants:'Brak aktywnych tymczasowych uprawnień',
+        labelConfirmDeleteRole:'Usunąć rolę "{role}"? To usunie ją od wszystkich użytkowników.',
+        labelConfirmDeleteRoleTitle:'Usunięcie roli',
+        labelConfirmRemoveRole:'Usunąć rolę "{role}" użytkownikowi {user}?',
+        labelConfirmRemoveRoleTitle:'Usunięcie roli użytkownikowi',
+        labelConfirmRevoke:'Cofnąć tymczasowy dostęp?', labelConfirmRevokeTitle:'Cofnięcie tymczasowego dostępu',
+      };
+      return defaults[k] || '';
+    },
 
     // ========== SUPABASE INIT ==========
     async initSupabase() {
@@ -1375,7 +1432,7 @@ export default {
 .layout { display: flex; min-height: 100vh; }
 
 /* ========== SIDEBAR ========== */
-.sidebar { width: var(--sidebar-w); border-right: 1px solid var(--sidebar-border); padding: 20px 0; display: flex; flex-direction: column; flex-shrink: 0; background: var(--sidebar-bg); }
+.sidebar { width: var(--sidebar-w); border-right: 1px solid var(--sidebar-border); padding: 20px 0; display: flex; flex-direction: column; flex-shrink: 0; background: var(--sidebar-bg); position: sticky; top: 0; height: 100vh; overflow-y: auto; }
 .sidebar-brand { padding: 0 20px 20px; border-bottom: 1px solid var(--border); }
 .sidebar-name { font-size: 18px; font-weight: 700; letter-spacing: -0.5px; }
 .sidebar-nav { padding: var(--sp-sm); flex: 1; }
@@ -1440,12 +1497,13 @@ export default {
 .select-field option { background: var(--select-opt-bg); color: var(--select-opt-text); }
 
 /* ========== TABLE ========== */
-.table-header { display: grid; grid-template-columns: 1.2fr 220px 140px 80px 120px; padding: 10px var(--sp-md); font-size: var(--small-size); color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: .8px; border-bottom: 1px solid var(--border); }
-.table-row { display: grid; grid-template-columns: 1.2fr 220px 140px 80px 120px; align-items: center; padding: 12px var(--sp-md); cursor: pointer; border-bottom: 1px solid var(--row-border); transition: background var(--anim-dur); }
+.table-header { display: grid; grid-template-columns: 1.4fr 1fr 80px 120px; padding: 10px var(--sp-md); font-size: var(--small-size); color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: .8px; border-bottom: 1px solid var(--border); }
+.table-row { display: grid; grid-template-columns: 1.4fr 1fr 80px 120px; align-items: center; padding: 12px var(--sp-md); cursor: pointer; border-bottom: 1px solid var(--row-border); transition: background var(--anim-dur); }
 .table-row:hover { background: var(--row-hover); }
 .table-row.selected { background: var(--row-selected); }
 .user-name { font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
 .user-email { margin-top: 2px; }
+.user-dept { margin-top: 1px; font-style: italic; }
 .col-roles { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
 .col-status { display: flex; align-items: center; gap: 6px; }
 
@@ -1608,8 +1666,8 @@ export default {
 @media (max-width: 768px) {
   .sidebar { display: none; }
   .grid-2col { grid-template-columns: 1fr; }
-  .table-header, .table-row { grid-template-columns: 1fr 120px 80px; }
-  .col-dept, .col-clients { display: none; }
+  .table-header, .table-row { grid-template-columns: 1fr 80px; }
+  .col-roles { display: none; }
   .page { padding: var(--sp-md); }
   .detail-panel { width: 100%; }
   .modal { width: 95vw; }
