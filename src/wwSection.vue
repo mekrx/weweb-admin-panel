@@ -76,10 +76,11 @@
             </div>
             <div class="card no-pad">
               <div class="table-header">
-                <span class="col-user">{{L('labelColUser')||'UŻYTKOWNIK'}}</span>
-                <span class="col-roles">{{L('labelColRoles')||'ROLE'}}</span>
-                <span class="col-clients">{{L('labelColClients')||'KLIENTÓW'}}</span>
-                <span class="col-status">{{L('labelColStatus')||'STATUS'}}</span>
+                <span class="col-user">{{L('labelColUser')}}</span>
+                <span class="col-roles">{{L('labelColRoles')}}</span>
+                <span class="col-dept">{{L('labelColDept')}}</span>
+                <span class="col-clients">{{L('labelColClients')}}</span>
+                <span class="col-status">{{L('labelColStatus')}}</span>
               </div>
               <div
                 v-for="u in paginatedUsers" :key="u.id"
@@ -89,29 +90,29 @@
                 <div class="col-user">
                   <div class="user-name">
                     {{u.full_name}}
-                    <span v-if="u.is_super_admin" class="badge-sa">{{L('labelSuperAdmin')||'SuperAdmin'}}</span>
-                    <span v-if="u.on_vacation" class="badge-vacation">{{L('labelVacation')||'URLOP'}}</span>
+                    <span v-if="u.is_super_admin" class="badge-sa">{{L('labelSuperAdmin')}}</span>
+                    <span v-if="u.on_vacation" class="badge-vacation">{{L('labelVacation')}}</span>
                   </div>
                   <div class="user-email text-muted text-sm">{{u.email}}</div>
-                  <div v-if="u.oddzial" class="user-dept text-muted text-sm">{{u.oddzial}}</div>
                 </div>
                 <div class="col-roles">
                   <span v-for="r in uniqueRoles(u).slice(0,3)" :key="r" class="role-badge-sm" :style="roleBadgeStyle(r)">{{r}}</span>
                   <span v-if="uniqueRoles(u).length>3" class="text-muted text-sm">+{{uniqueRoles(u).length-3}}</span>
                 </div>
+                <div class="col-dept text-muted ellipsis">{{truncate(u.oddzial,16)||'—'}}</div>
                 <div class="col-clients mono">{{u.visible_clients_count}}</div>
                 <div class="col-status">
                   <span class="status-dot" :class="'status-'+u.status"></span>
                   <span class="status-text text-sm" :class="'status-text-'+u.status">{{statusLabel(u.status)}}</span>
                 </div>
               </div>
-              <div v-if="filteredUsers.length===0" class="empty-state">{{L('labelNoResults')||'Brak wyników'}}</div>
+              <div v-if="filteredUsers.length===0" class="empty-state">{{L('labelNoResults')}}</div>
             </div>
             <!-- PAGINATION -->
-            <div v-if="totalPages>1" class="pagination">
-              <button class="btn-ghost" :disabled="currentPage<=1" @click="currentPage--">← {{L('labelPrev')}}</button>
-              <span class="text-muted text-sm">{{currentPage}} / {{totalPages}}</span>
-              <button class="btn-ghost" :disabled="currentPage>=totalPages" @click="currentPage++">{{L('labelNext')}} →</button>
+            <div v-if="userTotalPages>1" class="pagination">
+              <button class="btn-ghost" :disabled="userCurrentPage<=1" @click="userCurrentPage--">← {{L('labelPrev')}}</button>
+              <span class="text-muted text-sm">{{userCurrentPage}} / {{userTotalPages}}</span>
+              <button class="btn-ghost" :disabled="userCurrentPage>=userTotalPages" @click="userCurrentPage++">{{L('labelNext')}} →</button>
             </div>
           </div>
 
@@ -119,7 +120,7 @@
           <div v-else-if="activePage==='roles'" class="page">
             <div class="page-title-row">
               <h1 class="page-title">{{L('labelRoles')}}</h1>
-              <button v-if="cap.can_create_roles" class="btn-primary" @click="showCreateRole=true">{{L('labelBtnNewRole')}}</button>
+              <button v-if="cap.can_create_roles" class="btn-primary" @click="openModal('createRole')">{{L('labelBtnNewRole')}}</button>
             </div>
             <p class="text-muted text-sm margin-b-lg">{{L('labelRolesHint')}}</p>
             <div v-for="rl in rolesWithTemplates" :key="rl.name" class="card margin-b-sm">
@@ -147,26 +148,37 @@
           <div v-else-if="activePage==='audit'" class="page">
             <h1 class="page-title">{{L('labelAudit')}}</h1>
             <div class="toolbar">
-              <select class="select-field" v-model="auditFilter" @change="loadAudit">
+              <select class="select-field" v-model="auditFilter" @change="loadAudit(true)">
                 <option value="">{{L('labelAuditAllTables')}}</option>
                 <option v-for="t in auditTables" :key="t" :value="t">{{t}}</option>
               </select>
               <input class="input-field" v-model="auditUser" :placeholder="L('labelAuditEmailPlaceholder')" @input="debounceAudit"/>
             </div>
             <div class="card no-pad">
-              <div v-for="(a,i) in auditLogs" :key="a.id" class="audit-row" :class="{last:i===auditLogs.length-1}">
-                <div class="audit-top">
-                  <div class="audit-left">
-                    <span class="audit-table-badge">{{a.table_label||a.table_name}}</span>
-                    <span v-if="a.action_type" class="action-badge" :class="'action-'+a.action_type">{{a.action_type}}</span>
-                  </div>
-                  <span class="text-muted text-sm">{{formatDate(a.created_at)}}</span>
-                </div>
-                <div class="audit-description">{{a.human_description||a.description}}</div>
-                <div v-if="a.details" class="audit-details text-muted text-sm">{{a.details}}</div>
-                <div class="text-muted text-sm">{{a.user_name||a.user_email}}</div>
+              <div v-if="auditLoading" class="loader" style="min-height:120px">
+                <div class="spinner"></div>
               </div>
-              <div v-if="auditLogs.length===0" class="empty-state">{{L('labelNoAuditEntries')}}</div>
+              <template v-else>
+                <div v-for="(a,i) in auditLogs" :key="a.id" class="audit-row" :class="{last:i===auditLogs.length-1}">
+                  <div class="audit-top">
+                    <div class="audit-left">
+                      <span class="audit-table-badge">{{a.table_label||a.table_name}}</span>
+                      <span v-if="a.action_type" class="action-badge" :class="'action-'+a.action_type">{{a.action_type}}</span>
+                    </div>
+                    <span class="text-muted text-sm">{{formatDate(a.created_at)}}</span>
+                  </div>
+                  <div class="audit-description">{{a.human_description||a.description}}</div>
+                  <div v-if="a.details" class="audit-details text-muted text-sm">{{a.details}}</div>
+                  <div class="text-muted text-sm">{{a.user_name||a.user_email}}</div>
+                </div>
+                <div v-if="auditLogs.length===0" class="empty-state">{{L('labelNoAuditEntries')}}</div>
+              </template>
+            </div>
+            <!-- AUDIT PAGINATION -->
+            <div v-if="auditTotalPages>1" class="pagination">
+              <button class="btn-ghost" :disabled="auditCurrentPage<=1" @click="auditCurrentPage--;loadAudit()">← {{L('labelPrev')}}</button>
+              <span class="text-muted text-sm">{{auditCurrentPage}} / {{auditTotalPages}}</span>
+              <button class="btn-ghost" :disabled="auditCurrentPage>=auditTotalPages" @click="auditCurrentPage++;loadAudit()">{{L('labelNext')}} →</button>
             </div>
           </div>
 
@@ -201,7 +213,7 @@
       </div>
 
       <!-- ==================== USER DETAIL PANEL ==================== -->
-      <div v-if="selectedUser" class="overlay" @click.self="selectedUser=null">
+      <div v-if="selectedUser" class="overlay" @click.self="closeAllModals">
         <div class="detail-panel">
           <div class="detail-header">
             <div>
@@ -215,12 +227,12 @@
                 {{L('labelColStatus')}}: <span class="status-text" :class="'status-text-'+selectedUser.status">{{statusLabel(selectedUser.status)}}</span>
               </div>
             </div>
-            <button class="btn-close" @click="selectedUser=null">✕</button>
+            <button class="btn-close" @click="closeAllModals">✕</button>
           </div>
           <div class="detail-actions">
-            <button class="btn-primary" @click="showCopyModal=true">{{L('labelBtnCopy')}}</button>
-            <button class="btn-secondary" @click="showAddRoleModal=true">{{L('labelBtnAddRole')}}</button>
-            <button v-if="cap.can_grant_temporary" class="btn-secondary" @click="showTempGrantModal=true">{{L('labelBtnTempAccess')}}</button>
+            <button class="btn-primary" @click="openModal('copy')">{{L('labelBtnCopy')}}</button>
+            <button class="btn-secondary" @click="openModal('addRole')">{{L('labelBtnAddRole')}}</button>
+            <button v-if="cap.can_grant_temporary" class="btn-secondary" @click="openModal('tempGrant')">{{L('labelBtnTempAccess')}}</button>
           </div>
           <div class="detail-tabs">
             <button
@@ -262,25 +274,12 @@
               <div class="big-number">{{selectedUser.visible_clients_count}}</div>
               <div class="text-muted text-sm" style="text-align:center">{{L('labelVisibleClients')}}</div>
             </div>
-            <!-- DEPARTMENTS TAB -->
-            <div v-if="detailTab==='departments'">
-              <div class="section-label">{{L('labelUserDepts')}}</div>
-              <div class="odz-grid">
-                <div v-for="o in allOdz" :key="o.id" class="odz-checkbox" :class="{checked:userHasDept(selectedUser, o.id)}">
-                  <div class="checkbox" :class="{active:userHasDept(selectedUser, o.id)}"><span v-if="userHasDept(selectedUser, o.id)">✓</span></div>
-                  {{o.name}}
-                </div>
-              </div>
-              <div class="text-muted text-sm margin-t-md" style="text-align:center">
-                {{countUserDepts(selectedUser)}} {{L('labelOf')}} {{allOdz.length}} {{L('labelDepartments').toLowerCase()}}
-              </div>
-            </div>
           </div>
         </div>
       </div>
 
       <!-- ==================== ADD ROLE MODAL ==================== -->
-      <div v-if="showAddRoleModal&&selectedUser" class="overlay" @click.self="showAddRoleModal=false">
+      <div v-if="activeModal==='addRole'&&selectedUser" class="overlay" @click.self="activeModal=null">
         <div class="modal">
           <div class="modal-title">{{L('labelAddRoleFor')}} {{selectedUser.full_name}}</div>
           <div class="roles-wrap">
@@ -295,7 +294,7 @@
       </div>
 
       <!-- ==================== COPY MODAL ==================== -->
-      <div v-if="showCopyModal&&selectedUser" class="overlay" @click.self="closeCopyModal">
+      <div v-if="activeModal==='copy'&&selectedUser" class="overlay" @click.self="closeCopyModal">
         <div class="modal modal-wide">
           <!-- Step 1: Select target -->
           <template v-if="copyStep===1">
@@ -366,7 +365,7 @@
       </div>
 
       <!-- ==================== TEMP GRANT MODAL ==================== -->
-      <div v-if="showTempGrantModal&&selectedUser" class="overlay" @click.self="showTempGrantModal=false">
+      <div v-if="activeModal==='tempGrant'&&selectedUser" class="overlay" @click.self="activeModal=null">
         <div class="modal modal-wide">
           <div class="modal-title">{{L('labelTempAccessFor')}} {{selectedUser.full_name}}</div>
           <div class="section-label">{{L('labelTempType')}}</div>
@@ -404,7 +403,7 @@
       </div>
 
       <!-- ==================== EXTEND GRANT MODAL ==================== -->
-      <div v-if="showExtendModal" class="overlay" @click.self="showExtendModal=false">
+      <div v-if="activeModal==='extend'" class="overlay" @click.self="activeModal=null">
         <div class="modal">
           <div class="modal-title">{{L('labelExtendAccess')}}</div>
           <div class="section-label margin-t-sm">{{L('labelNewExpiry')}}</div>
@@ -414,7 +413,7 @@
       </div>
 
       <!-- ==================== CREATE ROLE MODAL ==================== -->
-      <div v-if="showCreateRole" class="overlay" @click.self="showCreateRole=false">
+      <div v-if="activeModal==='createRole'" class="overlay" @click.self="activeModal=null">
         <div class="modal modal-wide">
           <div class="modal-title">{{L('labelNewRole')}}</div>
           <input class="input-field margin-b-sm" v-model="newRoleName" :placeholder="L('labelRoleNamePlaceholder')"/>
@@ -442,7 +441,7 @@
       </div>
 
       <!-- ==================== EDIT ROLE MODAL ==================== -->
-      <div v-if="showEditRole" class="overlay" @click.self="showEditRole=false">
+      <div v-if="activeModal==='editRole'" class="overlay" @click.self="activeModal=null">
         <div class="modal modal-wide">
           <div class="modal-title">{{L('labelEditRole')}}: {{editRoleName}}</div>
           <div class="section-label margin-t-sm">{{L('labelRoleColor')}}</div>
@@ -469,7 +468,7 @@
       </div>
 
       <!-- ==================== EDIT USER PERMISSIONS MODAL ==================== -->
-      <div v-if="showEditPerms" class="overlay" @click.self="showEditPerms=false">
+      <div v-if="activeModal==='editPerms'" class="overlay" @click.self="activeModal=null">
         <div class="modal modal-wide">
           <div class="modal-title">{{L('labelEditPermsFor')}} {{selectedUser?.full_name}}</div>
           <div class="text-muted text-sm margin-b-md">{{L('labelEditPermsHint')}}</div>
@@ -501,8 +500,16 @@
         </div>
       </div>
 
-      <!-- TOAST -->
-      <div v-if="toast" class="toast" :class="toast.type">{{toast.message}}</div>
+      <!-- TOAST STACK -->
+      <transition-group name="toast-anim" tag="div" class="toast-stack">
+        <div
+          v-for="t in toasts" :key="t.id"
+          class="toast" :class="t.type"
+        >
+          <span class="toast-msg">{{t.message}}</span>
+          <button v-if="t.type!=='success'" class="toast-close" @click="dismissToast(t.id)">✕</button>
+        </div>
+      </transition-group>
     </template>
   </div>
 </template>
@@ -524,13 +531,8 @@ const ROLE_COLORS = {
   onboarding: { bg: '#1b2e4e', fg: '#b8d4ff' },
 };
 
-const AVAILABLE_TABLES = [
-  'archiwum', 'oplaty', 'managers', 'users_roles', 'user_permissions',
-  'vacations', 'korespondencja', 'role_permissions', 'temporary_grants',
-  'oddzialy', 'change_logs', 'global_settings', 'clients',
-];
-
 const PER_PAGE = 50;
+const AUDIT_PER_PAGE = 50;
 
 export default {
   props: { content: { type: Object, required: true } },
@@ -539,10 +541,11 @@ export default {
       supabase: null,
       loading: true,
       activePage: 'dashboard',
+      activeModal: null,
       detailTab: 'roles',
       searchQuery: '',
       filterRole: '',
-      currentPage: 1,
+      userCurrentPage: 1,
 
       stats: {},
       users: [],
@@ -552,22 +555,20 @@ export default {
       auditLogs: [],
       tempGrants: [],
       cap: {},
+      availableTables: [],
 
       selectedUser: null,
-      showAddRoleModal: false,
-      showCopyModal: false,
-      showTempGrantModal: false,
-      showCreateRole: false,
-      showExtendModal: false,
-      showEditRole: false,
-      showEditPerms: false,
-      toast: null,
+      toasts: [],
+      _toastCounter: 0,
       confirmModal: null,
 
       // Audit
       auditFilter: '',
       auditUser: '',
       auditTables: [],
+      auditCurrentPage: 1,
+      auditTotal: 0,
+      auditLoading: false,
 
       // Copy
       copyStep: 1,
@@ -605,8 +606,7 @@ export default {
       // Edit user permissions
       editPermsData: [],
 
-      // Timers
-      _auditTimer: null,
+      // Debounce
       _debounceTimer: null,
     };
   },
@@ -687,16 +687,6 @@ export default {
         '--nav-active-bg': c.navActiveBg || 'rgba(99,102,241,0.12)',
         '--nav-inactive': c.navInactiveColor || '#8a8880',
         '--nav-hover-bg': c.navHoverBg || 'rgba(99,102,241,0.06)',
-        '--stat-managers-color': c.statManagersColor || '#22c55e',
-        '--stat-clients-color': c.statClientsColor || '#6366f1',
-        '--stat-vacation-color': c.statVacationColor || '#eab308',
-        '--stat-pending-color': c.statPendingColor || '#ef4444',
-        '--stat-changes-color': c.statChangesColor || '#8b5cf6',
-        '--stat-temp-color': c.statTempColor || '#f59e0b',
-        '--stat-roles-color': c.statRolesColor || '#6366f1',
-        '--stat-depts-color': c.statDeptsColor || '#0ea5e9',
-        '--detail-tab-active-color': c.detailTabActiveColor || c.navActiveColor || '#6366f1',
-        '--detail-tab-active-border': c.detailTabActiveBorder || c.navActiveColor || '#6366f1',
         '--action-active-bg': c.actionActiveBg || '#6366f1',
         '--action-active-text': c.actionActiveText || '#ffffff',
         '--action-active-border': c.actionActiveBorder || '#6366f1',
@@ -723,7 +713,6 @@ export default {
       return [
         { id: 'roles', label: this.content.labelTabRoles || 'Role i uprawnienia' },
         { id: 'visibility', label: this.content.labelTabVisibility || 'Widoczność klientów' },
-        { id: 'departments', label: this.content.labelTabDepts || 'Oddziały' },
       ];
     },
 
@@ -731,35 +720,40 @@ export default {
       const s = this.stats;
       const c = this.content;
       const all = [
-        { id: 'managers', v: s.total_managers || 0, l: this.L('labelStatManagers'), c: 'var(--stat-managers-color)', show: c.showStatManagers !== false, order: c.orderStatManagers ?? 1 },
-        { id: 'clients', v: s.active_clients || 0, l: this.L('labelStatClients'), c: 'var(--stat-clients-color)', show: c.showStatClients !== false, order: c.orderStatClients ?? 2 },
-        { id: 'vacation', v: s.on_vacation_now || 0, l: this.L('labelStatVacation'), c: 'var(--stat-vacation-color)', show: c.showStatVacation !== false, order: c.orderStatVacation ?? 3 },
-        { id: 'pending', v: s.pending_vacations || 0, l: this.L('labelStatPending'), c: 'var(--stat-pending-color)', show: c.showStatPending !== false, order: c.orderStatPending ?? 4 },
-        { id: 'changes', v: s.recent_changes_24h || 0, l: this.L('labelStatChanges'), c: 'var(--stat-changes-color)', show: c.showStatChanges !== false, order: c.orderStatChanges ?? 5 },
-        { id: 'temp', v: s.active_temp_grants || 0, l: this.L('labelStatTempGrants'), c: 'var(--stat-temp-color)', show: c.showStatTempGrants === true, order: c.orderStatTempGrants ?? 6 },
-        { id: 'roles_count', v: s.total_roles || this.allRoles.length || 0, l: this.L('labelStatRolesCount'), c: 'var(--stat-roles-color)', show: c.showStatRolesCount === true, order: c.orderStatRolesCount ?? 7 },
-        { id: 'depts', v: s.total_departments || this.allOdz.length || 0, l: this.L('labelStatDepts'), c: 'var(--stat-depts-color)', show: c.showStatDepts === true, order: c.orderStatDepts ?? 8 },
+        { id: 'managers', v: s.total_managers || 0, l: this.L('labelStatManagers') || 'Aktywni menedżerowie', c: 'var(--status-active)', show: c.showStatManagers !== false },
+        { id: 'clients', v: s.active_clients || 0, l: this.L('labelStatClients') || 'Aktywni klienci', c: 'var(--accent)', show: c.showStatClients !== false },
+        { id: 'vacation', v: s.on_vacation_now || 0, l: this.L('labelStatVacation') || 'Na urlopie', c: 'var(--status-inactive)', show: c.showStatVacation !== false },
+        { id: 'pending', v: s.pending_vacations || 0, l: this.L('labelStatPending') || 'Oczekujące urlopy', c: 'var(--status-terminated)', show: c.showStatPending !== false },
+        { id: 'changes', v: s.recent_changes_24h || 0, l: this.L('labelStatChanges') || 'Zmiany 24h', c: '#8b5cf6', show: c.showStatChanges !== false },
+        { id: 'temp', v: s.active_temp_grants || 0, l: this.L('labelStatTempGrants') || 'Aktywne tymcz. dostępy', c: '#f59e0b', show: c.showStatTempGrants === true },
+        { id: 'roles_count', v: s.total_roles || this.allRoles.length || 0, l: this.L('labelStatRolesCount') || 'Zdefiniowane role', c: '#6366f1', show: c.showStatRolesCount === true },
+        { id: 'depts', v: s.total_departments || this.allOdz.length || 0, l: this.L('labelStatDepts') || 'Oddziały', c: '#0ea5e9', show: c.showStatDepts === true },
       ];
-      return all.filter(x => x.show).sort((a, b) => a.order - b.order);
+      return all.filter(x => x.show);
     },
 
     filteredUsers() {
+      const q = this.searchQuery.toLowerCase();
       return this.users.filter(u => {
-        const matchSearch = !this.searchQuery ||
-          u.full_name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-          u.email.toLowerCase().includes(this.searchQuery.toLowerCase());
+        const matchSearch = !q ||
+          u.full_name.toLowerCase().includes(q) ||
+          u.email.toLowerCase().includes(q);
         const matchRole = !this.filterRole || (u.roles || []).includes(this.filterRole);
         return matchSearch && matchRole;
       });
     },
 
-    totalPages() {
+    userTotalPages() {
       return Math.max(1, Math.ceil(this.filteredUsers.length / PER_PAGE));
     },
 
     paginatedUsers() {
-      const start = (this.currentPage - 1) * PER_PAGE;
+      const start = (this.userCurrentPage - 1) * PER_PAGE;
       return this.filteredUsers.slice(start, start + PER_PAGE);
+    },
+
+    auditTotalPages() {
+      return Math.max(1, Math.ceil(this.auditTotal / AUDIT_PER_PAGE));
     },
 
     availableRoles() {
@@ -810,22 +804,19 @@ export default {
     canApplyTempGrant() {
       return !!this.tempGrantExp && (this.tempGrantType === 'role' ? !!this.tempGrantRole : this.tempGrantOdz.length > 0);
     },
-
-    availableTables() {
-      return AVAILABLE_TABLES;
-    },
   },
 
   watch: {
     'content.supabaseUrl'() { this.initSupabase(); },
     'content.supabaseAnonKey'() { this.initSupabase(); },
     activePage(p) {
-      if (p === 'audit') this.loadAudit();
+      if (p === 'audit') { this.auditCurrentPage = 1; this.loadAudit(); }
       if (p === 'temp') this.loadTempGrants();
       if (p === 'roles') this.loadRoles();
+      if (p === 'dashboard') this.refreshStats();
     },
-    searchQuery() { this.currentPage = 1; },
-    filterRole() { this.currentPage = 1; },
+    searchQuery() { this.userCurrentPage = 1; },
+    filterRole() { this.userCurrentPage = 1; },
   },
 
   mounted() {
@@ -835,61 +826,21 @@ export default {
   },
 
   unmounted() {
-    this.clearAuditTimer();
     if (this._debounceTimer) clearTimeout(this._debounceTimer);
   },
 
   methods: {
-    L(k) {
-      if (this.content[k]) return this.content[k];
-      // Fallback defaults for all label properties
-      const defaults = {
-        labelDashboard:'Dashboard', labelUsers:'Użytkownicy', labelRoles:'Role', labelAudit:'Audyt', labelTemp:'Tymczasowe',
-        labelStatManagers:'Aktywni menedżerowie', labelStatClients:'Aktywni klienci', labelStatVacation:'Na urlopie',
-        labelStatPending:'Oczekujące urlopy', labelStatChanges:'Zmiany 24h', labelStatTempGrants:'Aktywne tymcz. dostępy',
-        labelStatRolesCount:'Zdefiniowane role', labelStatDepts:'Oddziały',
-        labelRolesDistribution:'Rozkład ról', labelDepartments:'Oddziały',
-        labelColUser:'UŻYTKOWNIK', labelColRoles:'ROLE', labelColDept:'ODDZIAŁ', labelColClients:'KLIENTÓW', labelColStatus:'STATUS',
-        labelStatusActive:'Aktywny', labelStatusInactive:'Nieaktywny', labelStatusTerminated:'Zwolniony', labelStatusVacation:'Urlop',
-        labelBtnCopy:'Kopiuj uprawnienia na...', labelBtnAddRole:'+ Dodaj rolę', labelBtnTempAccess:'⏱ Tymczasowy dostęp',
-        labelBtnNewRole:'+ Nowa rola', labelBtnEditRole:'Edytuj', labelBtnEditPerms:'Edytuj',
-        labelBtnApply:'Zastosuj kopię', labelBtnApplyModified:'Zastosuj ze zmianami',
-        labelBtnExtend:'Przedłuż', labelBtnRevoke:'Cofnij',
-        labelGrantedBy:'Nadane przez', labelExpiresAt:'Wygasa',
-        labelSearch:'Szukaj po nazwisku lub email...', labelAllRoles:'Wszystkie role', labelNoResults:'Brak wyników',
-        labelSuperAdmin:'SuperAdmin', labelVacation:'URLOP', labelPrev:'Wstecz', labelNext:'Dalej',
-        labelTabRoles:'Role i uprawnienia', labelTabVisibility:'Widoczność klientów', labelTabDepts:'Oddziały',
-        labelAssignedRoles:'Wydane role', labelPermissions:'Uprawnienia', labelVisibleClients:'widocznych klientów',
-        labelAutoFromRoles:'auto z ról', labelNoRoles:'Brak ról',
-        labelSuperAdminAccess:'Super admin — pełny dostęp', labelNoPermissions:'Brak uprawnień',
-        labelAllRolesAssigned:'Wszystkie role przypisane',
-        labelAddRoleFor:'Dodaj rolę —', labelDept:'Oddział', labelUserDepts:'Dostępne oddziały',
-        labelCopyFrom:'Kopiuj z', labelSelectTarget:'Wybierz cel', labelReviewCopy:'Sprawdź i dostosuj',
-        labelChangeTarget:'Zmień cel', labelChanged:'zmienione', labelSummary:'Podsumowanie',
-        labelTarget:'Cel', labelNone:'brak', labelOf:'z', labelSelectAll:'Zaznacz wszystkie', labelClearAll:'Wyczyść',
-        labelRoles:'Role',
-        labelTempAccessFor:'Tymczasowy dostęp —', labelTempType:'Typ', labelTempRole:'Rola', labelTempDept:'Oddział',
-        labelTempExpires:'Wygasa (czas polski)', labelTempReason:'Powód (opcjonalnie)',
-        labelTempReasonPlaceholder:'np. zastępstwo za...', labelTempApply:'Nadaj tymczasowy dostęp',
-        labelSelectRole:'Wybierz rolę', labelSelectDepts:'Wybierz oddziały',
-        labelExtendAccess:'Przedłuż dostęp', labelNewExpiry:'Nowa data wygaśnięcia',
-        labelSave:'Zapisz', labelCreate:'Utwórz', labelCancel:'Anuluj', labelConfirm:'Potwierdź',
-        labelNewRole:'Nowa rola', labelRoleNamePlaceholder:'Nazwa roli...',
-        labelEditRole:'Edycja roli', labelTemplates:'Szablony uprawnień',
-        labelSelectTable:'Wybierz tabelę', labelAddTemplate:'Dodaj szablon', labelNoTemplates:'Brak szablonów',
-        labelRolesHint:'Zmiana szablonu automatycznie aktualizuje uprawnienia wszystkich użytkowników z tą rolą.',
-        labelUsersCount:'użytk.', labelRoleColor:'Kolor roli',
-        labelEditPermsFor:'Edycja uprawnień —', labelEditPermsHint:'Ręczna zmiana uprawnień nadpisuje automatyczne uprawnienia z ról.',
-        labelAddPermission:'Dodaj uprawnienie',
-        labelAuditAllTables:'Wszystkie', labelAuditEmailPlaceholder:'Wyszukaj Email...', labelNoAuditEntries:'Brak wpisów',
-        labelNoTempGrants:'Brak aktywnych tymczasowych uprawnień',
-        labelConfirmDeleteRole:'Usunąć rolę "{role}"? To usunie ją od wszystkich użytkowników.',
-        labelConfirmDeleteRoleTitle:'Usunięcie roli',
-        labelConfirmRemoveRole:'Usunąć rolę "{role}" użytkownikowi {user}?',
-        labelConfirmRemoveRoleTitle:'Usunięcie roli użytkownikowi',
-        labelConfirmRevoke:'Cofnąć tymczasowy dostęp?', labelConfirmRevokeTitle:'Cofnięcie tymczasowego dostępu',
-      };
-      return defaults[k] || '';
+    L(k) { return this.content[k] || ''; },
+
+    // ========== MODAL MANAGEMENT ==========
+    openModal(name) {
+      this.activeModal = name;
+    },
+
+    closeAllModals() {
+      this.activeModal = null;
+      this.selectedUser = null;
+      this.confirmModal = null;
     },
 
     // ========== SUPABASE INIT ==========
@@ -908,105 +859,128 @@ export default {
       }
     },
 
-    // ========== DATA LOADING ==========
+    // ========== DATA LOADING (SPLIT INTO TARGETED METHODS) ==========
     async loadAll() {
       this.loading = true;
-      try {
-        const [sRes, uRes, cRes, rRes, oRes] = await Promise.all([
-          this.supabase.rpc('admin_dashboard_stats'),
-          this.supabase.rpc('get_admin_users_overview'),
-          this.supabase.rpc('admin_get_my_capabilities'),
-          this.supabase.rpc('admin_get_roles_with_templates'),
-          this.supabase.from('oddzialy').select('id,oddzial').order('oddzial'),
-        ]);
+      const results = await Promise.allSettled([
+        this.supabase.rpc('admin_dashboard_stats'),
+        this.supabase.rpc('get_admin_users_overview'),
+        this.supabase.rpc('admin_get_my_capabilities'),
+        this.supabase.rpc('admin_get_roles_with_templates'),
+        this.supabase.from('oddzialy').select('id,oddzial').order('oddzial'),
+        this.supabase.rpc('admin_get_available_tables'),
+      ]);
 
-        if (sRes.error) throw sRes.error;
-        if (uRes.error) throw uRes.error;
-        if (cRes.error) throw cRes.error;
-        if (rRes.error) throw rRes.error;
-        if (oRes.error) throw oRes.error;
-
-        this.stats = sRes.data || {};
-        // get_admin_users_overview returns a jsonb array directly
-        const rawUsers = Array.isArray(uRes.data) ? uRes.data : (uRes.data || []);
-        this.users = this.deduplicateUsers(rawUsers);
-        this.cap = cRes.data || {};
-        this.rolesWithTemplates = rRes.data || [];
-        this.allRoles = this.rolesWithTemplates.map(x => x.name);
-        // Build role colors map from DB
-        const rcm = {};
-        for (const r of this.rolesWithTemplates) {
-          if (r.color_bg && r.color_fg) {
-            rcm[r.name] = { bg: r.color_bg, fg: r.color_fg };
-          }
-        }
-        this.roleColorsMap = rcm;
-        this.allOdz = (oRes.data || []).map(x => ({ id: x.id, name: x.oddzial }));
-
-        // Build audit tables from roles templates + known tables
-        const tblSet = new Set(AVAILABLE_TABLES);
-        this.rolesWithTemplates.forEach(r => (r.templates || []).forEach(t => tblSet.add(t.table_name)));
-        this.auditTables = [...tblSet].sort();
-      } catch (e) {
-        console.error('loadAll error:', e);
-        this.showToast(e.message || 'Błąd ładowania danych', 'error');
+      // Process stats
+      if (results[0].status === 'fulfilled' && !results[0].value.error) {
+        this.stats = results[0].value.data || {};
+      } else {
+        this.showToast('Nie udało się załadować statystyk', 'error');
       }
+
+      // Process users
+      if (results[1].status === 'fulfilled' && !results[1].value.error) {
+        const rawUsers = Array.isArray(results[1].value.data) ? results[1].value.data : (results[1].value.data || []);
+        this.users = rawUsers;
+      } else {
+        this.showToast('Nie udało się załadować użytkowników', 'error');
+      }
+
+      // Process capabilities
+      if (results[2].status === 'fulfilled' && !results[2].value.error) {
+        this.cap = results[2].value.data || {};
+      }
+
+      // Process roles
+      if (results[3].status === 'fulfilled' && !results[3].value.error) {
+        this.processRolesData(results[3].value.data);
+      } else {
+        this.showToast('Nie udało się załadować ról', 'error');
+      }
+
+      // Process oddzialy
+      if (results[4].status === 'fulfilled' && !results[4].value.error) {
+        this.allOdz = (results[4].value.data || []).map(x => ({ id: x.id, name: x.oddzial }));
+      }
+
+      // Process available tables
+      if (results[5].status === 'fulfilled' && !results[5].value.error) {
+        const tables = results[5].value.data || [];
+        this.availableTables = tables.map(t => t.name);
+        // Merge tables from role templates for complete list
+        this.rolesWithTemplates.forEach(r => (r.templates || []).forEach(t => {
+          if (!this.availableTables.includes(t.table_name)) this.availableTables.push(t.table_name);
+        }));
+        this.availableTables.sort();
+        this.auditTables = [...this.availableTables];
+      }
+
       this.loading = false;
     },
 
-    deduplicateUsers(users) {
-      const map = new Map();
-      for (const u of users) {
-        if (map.has(u.id)) {
-          const existing = map.get(u.id);
-          const mergedRoles = [...new Set([...(existing.roles || []), ...(u.roles || [])])];
-          existing.roles = mergedRoles;
-        } else {
-          map.set(u.id, { ...u, roles: [...new Set(u.roles || [])] });
+    processRolesData(data) {
+      this.rolesWithTemplates = data || [];
+      this.allRoles = this.rolesWithTemplates.map(x => x.name);
+      const rcm = {};
+      for (const r of this.rolesWithTemplates) {
+        if (r.color_bg && r.color_fg) {
+          rcm[r.name] = { bg: r.color_bg, fg: r.color_fg };
         }
       }
-      return [...map.values()];
+      this.roleColorsMap = rcm;
+    },
+
+    // Targeted refresh methods
+    async refreshStats() {
+      try {
+        const { data, error } = await this.supabase.rpc('admin_dashboard_stats');
+        if (error) throw error;
+        this.stats = data || {};
+      } catch (e) {
+        console.error('refreshStats error:', e);
+      }
+    },
+
+    async refreshUsers() {
+      try {
+        const { data, error } = await this.supabase.rpc('get_admin_users_overview');
+        if (error) throw error;
+        const rawUsers = Array.isArray(data) ? data : (data || []);
+        this.users = rawUsers;
+      } catch (e) {
+        console.error('refreshUsers error:', e);
+        this.showToast('Nie udało się odświeżyć użytkowników', 'error');
+      }
     },
 
     uniqueRoles(user) {
       return [...new Set(user?.roles || [])];
     },
 
-    async loadAudit() {
+    async loadAudit(resetPage) {
+      if (resetPage) this.auditCurrentPage = 1;
+      this.auditLoading = true;
       try {
+        const offset = (this.auditCurrentPage - 1) * AUDIT_PER_PAGE;
         const { data, error } = await this.supabase.rpc('admin_get_audit_trail', {
           p_table_name: this.auditFilter || null,
           p_user_email: this.auditUser || null,
-          p_limit: 200,
+          p_limit: AUDIT_PER_PAGE,
+          p_offset: offset,
         });
         if (error) throw error;
         this.auditLogs = data?.records || [];
+        this.auditTotal = data?.total || 0;
       } catch (e) {
         console.error('loadAudit error:', e);
         this.showToast(e.message || 'Błąd ładowania audytu', 'error');
       }
-      this.setupAuditRefresh();
-    },
-
-    clearAuditTimer() {
-      if (this._auditTimer) {
-        clearInterval(this._auditTimer);
-        this._auditTimer = null;
-      }
-    },
-
-    setupAuditRefresh() {
-      this.clearAuditTimer();
-      if (this.content.auditAutoRefresh !== false) {
-        this._auditTimer = setInterval(() => {
-          if (this.activePage === 'audit') this.loadAudit();
-        }, (this.content.auditRefreshInterval || 3) * 1000);
-      }
+      this.auditLoading = false;
     },
 
     debounceAudit() {
       if (this._debounceTimer) clearTimeout(this._debounceTimer);
-      this._debounceTimer = setTimeout(() => this.loadAudit(), 400);
+      this._debounceTimer = setTimeout(() => this.loadAudit(true), 400);
     },
 
     async loadTempGrants() {
@@ -1024,30 +998,35 @@ export default {
       try {
         const { data, error } = await this.supabase.rpc('admin_get_roles_with_templates');
         if (error) throw error;
-        this.rolesWithTemplates = data || [];
-        this.allRoles = this.rolesWithTemplates.map(x => x.name);
-        const rcm = {};
-        for (const r of this.rolesWithTemplates) {
-          if (r.color_bg && r.color_fg) rcm[r.name] = { bg: r.color_bg, fg: r.color_fg };
-        }
-        this.roleColorsMap = rcm;
+        this.processRolesData(data);
       } catch (e) {
         console.error('loadRoles error:', e);
         this.showToast(e.message || 'Błąd ładowania ról', 'error');
       }
     },
 
-    // ========== USER DETAIL ==========
-    openDetail(u) {
-      this.selectedUser = u;
-      this.detailTab = 'roles';
+    // ========== AFTER-ACTION REFRESH ==========
+    // Called after any mutation to refresh relevant data + audit
+    async afterMutation(opts = {}) {
+      const promises = [];
+      if (opts.users) promises.push(this.refreshUsers());
+      if (opts.roles) promises.push(this.loadRoles());
+      if (opts.stats) promises.push(this.refreshStats());
+      if (opts.temp) promises.push(this.loadTempGrants());
+      // Always refresh audit if on audit page
+      if (this.activePage === 'audit') promises.push(this.loadAudit());
+      await Promise.allSettled(promises);
+      // Update selectedUser reference if needed
+      if (opts.userId && this.selectedUser) {
+        this.selectedUser = this.users.find(u => u.id === opts.userId) || null;
+      }
     },
 
-    async refreshSelectedUser(uid) {
-      await this.loadAll();
-      if (uid) {
-        this.selectedUser = this.users.find(u => u.id === uid) || null;
-      }
+    // ========== USER DETAIL ==========
+    openDetail(u) {
+      this.activeModal = null; // close any open modal
+      this.selectedUser = u;
+      this.detailTab = 'roles';
     },
 
     // ========== ROLE MANAGEMENT ==========
@@ -1056,8 +1035,8 @@ export default {
         const { error } = await this.supabase.rpc('admin_assign_role', { p_user_id: uid, p_role_name: roleName });
         if (error) throw error;
         this.showToast(`Rola ${roleName} przypisana`, 'success');
-        this.showAddRoleModal = false;
-        await this.refreshSelectedUser(uid);
+        this.activeModal = null;
+        await this.afterMutation({ users: true, roles: true, userId: uid });
       } catch (e) {
         this.showToast(e.message, 'error');
       }
@@ -1068,7 +1047,7 @@ export default {
         const { error } = await this.supabase.rpc('admin_remove_role', { p_user_id: uid, p_role_name: roleName });
         if (error) throw error;
         this.showToast(`Rola ${roleName} usunięta`, 'success');
-        await this.refreshSelectedUser(uid);
+        await this.afterMutation({ users: true, roles: true, userId: uid });
       } catch (e) {
         this.showToast(e.message, 'error');
       }
@@ -1087,10 +1066,10 @@ export default {
         });
         if (error) throw error;
         this.showToast('Rola utworzona', 'success');
-        this.showCreateRole = false;
+        this.activeModal = null;
         this.newRoleName = '';
         this.newRoleTemplates = [];
-        await this.loadRoles();
+        await this.afterMutation({ roles: true, stats: true });
       } catch (e) {
         this.showToast(e.message, 'error');
       }
@@ -1098,10 +1077,14 @@ export default {
 
     async deleteRoleConfirmed(roleName) {
       try {
-        const { error } = await this.supabase.rpc('admin_delete_role', { p_role_name: roleName });
+        const { data, error } = await this.supabase.rpc('admin_delete_role', { p_role_name: roleName, p_force: true });
         if (error) throw error;
+        if (data && data.success === false) {
+          this.showToast(data.error, 'error');
+          return;
+        }
         this.showToast('Rola usunięta', 'success');
-        await this.loadRoles();
+        await this.afterMutation({ roles: true, users: true, stats: true });
       } catch (e) {
         this.showToast(e.message, 'error');
       }
@@ -1116,7 +1099,7 @@ export default {
         table_name: t.table_name,
         actions: [...(t.actions || [])].filter(a => a !== 'all'),
       }));
-      this.showEditRole = true;
+      this.openModal('editRole');
     },
 
     async saveRoleTemplates() {
@@ -1124,21 +1107,19 @@ export default {
         const templates = this.editRoleTemplates
           .filter(t => t.table_name && t.actions.length)
           .map(t => ({ table_name: t.table_name, actions: t.actions }));
-        const { data, error } = await this.supabase.rpc('admin_update_role_templates', {
+        const { error } = await this.supabase.rpc('admin_update_role_templates', {
           p_role_name: this.editRoleName,
           p_templates: templates,
         });
         if (error) throw error;
-        // Save color
         await this.supabase.rpc('admin_update_role_color', {
           p_role_name: this.editRoleName,
           p_color_bg: this.editRoleColorBg,
           p_color_fg: this.editRoleColorFg,
         });
         this.showToast('Rola zaktualizowana', 'success');
-        this.showEditRole = false;
-        await this.loadRoles();
-        await this.loadAll();
+        this.activeModal = null;
+        await this.afterMutation({ roles: true, users: true });
       } catch (e) {
         this.showToast(e.message, 'error');
       }
@@ -1155,7 +1136,7 @@ export default {
       if (this.editPermsData.length === 0) {
         this.editPermsData.push({ table_name: '', actions: [] });
       }
-      this.showEditPerms = true;
+      this.openModal('editPerms');
     },
 
     async saveUserPermissions() {
@@ -1166,14 +1147,14 @@ export default {
             permsObj[p.table_name] = p.actions;
           }
         }
-        const { data, error } = await this.supabase.rpc('admin_update_user_permissions', {
+        const { error } = await this.supabase.rpc('admin_update_user_permissions', {
           p_user_id: this.selectedUser.id,
           p_permissions: permsObj,
         });
         if (error) throw error;
         this.showToast('Uprawnienia zaktualizowane', 'success');
-        this.showEditPerms = false;
-        await this.refreshSelectedUser(this.selectedUser.id);
+        this.activeModal = null;
+        await this.afterMutation({ users: true, userId: this.selectedUser.id });
       } catch (e) {
         this.showToast(e.message, 'error');
       }
@@ -1181,7 +1162,7 @@ export default {
 
     // ========== COPY PERMISSIONS ==========
     closeCopyModal() {
-      this.showCopyModal = false;
+      this.activeModal = null;
       this.copyStep = 1;
       this.copySearch = '';
       this.copyTarget = null;
@@ -1191,9 +1172,7 @@ export default {
 
     selectCopyTarget(u) {
       this.copyTarget = u;
-      // Load SOURCE user's roles to copy from
       this.copyRoles = [...this.sourceRoles];
-      // Load SOURCE user's departments
       const s = this.selectedUser?.allowed_oddzial_ids;
       this.copyOdz = s === null ? this.allOdz.map(o => o.id) : [...(s || [])];
       this.copyStep = 2;
@@ -1217,17 +1196,15 @@ export default {
           p_copy_roles: true,
           p_copy_oddzialy: !this.copyOdzChanged,
         };
-        // Only pass arrays if there are changes
         if (this.copyAdded.length) params.p_add_roles = this.copyAdded;
         if (this.copyRemoved.length) params.p_remove_roles = this.copyRemoved;
         if (this.copyOdzChanged) params.p_override_oddzialy = this.copyOdz;
         
-        const { data, error } = await this.supabase.rpc('admin_copy_permissions', params);
+        const { error } = await this.supabase.rpc('admin_copy_permissions', params);
         if (error) throw error;
         this.showToast('Uprawnienia skopiowane', 'success');
-        this.showCopyModal = false;
-        this.copyStep = 1;
-        await this.loadAll();
+        this.closeCopyModal();
+        await this.afterMutation({ users: true, roles: true, stats: true });
       } catch (e) {
         this.showToast(e.message, 'error');
       }
@@ -1260,12 +1237,12 @@ export default {
         }
         if (error) throw error;
         this.showToast('Tymczasowy dostęp nadany', 'success');
-        this.showTempGrantModal = false;
+        this.activeModal = null;
         this.tempGrantRole = '';
         this.tempGrantOdz = [];
         this.tempGrantExp = '';
         this.tempGrantReason = '';
-        await this.loadAll();
+        await this.afterMutation({ users: true, temp: true, stats: true });
       } catch (e) {
         this.showToast(e.message, 'error');
       }
@@ -1274,7 +1251,7 @@ export default {
     extendGrant(g) {
       this.extendGrant_ = g;
       this.extendDate = '';
-      this.showExtendModal = true;
+      this.openModal('extend');
     },
 
     async doExtend() {
@@ -1285,8 +1262,8 @@ export default {
         });
         if (error) throw error;
         this.showToast('Przedłużono', 'success');
-        this.showExtendModal = false;
-        await this.loadTempGrants();
+        this.activeModal = null;
+        await this.afterMutation({ temp: true });
       } catch (e) {
         this.showToast(e.message, 'error');
       }
@@ -1297,7 +1274,7 @@ export default {
         const { error } = await this.supabase.rpc('admin_revoke_temp_grant', { p_grant_id: g.id });
         if (error) throw error;
         this.showToast('Cofnięto', 'success');
-        await Promise.all([this.loadTempGrants(), this.loadAll()]);
+        await this.afterMutation({ temp: true, users: true });
       } catch (e) {
         this.showToast(e.message, 'error');
       }
@@ -1398,23 +1375,19 @@ export default {
       return e && (new Date(e) - new Date() < 3600000);
     },
 
-    userHasDept(user, deptId) {
-      if (!user) return false;
-      const ids = user.allowed_oddzial_ids;
-      if (ids === null || ids === undefined) return true; // null means all departments
-      return Array.isArray(ids) && ids.includes(deptId);
-    },
-
-    countUserDepts(user) {
-      if (!user) return 0;
-      const ids = user.allowed_oddzial_ids;
-      if (ids === null || ids === undefined) return this.allOdz.length;
-      return Array.isArray(ids) ? ids.length : 0;
-    },
-
+    // ========== TOAST SYSTEM ==========
     showToast(msg, type = 'info') {
-      this.toast = { message: msg, type };
-      setTimeout(() => { this.toast = null; }, 3500);
+      const id = ++this._toastCounter;
+      this.toasts.push({ id, message: msg, type });
+      // Auto-dismiss success toasts after 3.5s
+      if (type === 'success') {
+        setTimeout(() => this.dismissToast(id), 3500);
+      }
+    },
+
+    dismissToast(id) {
+      const idx = this.toasts.findIndex(t => t.id === id);
+      if (idx > -1) this.toasts.splice(idx, 1);
     },
   },
 };
@@ -1432,7 +1405,7 @@ export default {
 .layout { display: flex; min-height: 100vh; }
 
 /* ========== SIDEBAR ========== */
-.sidebar { width: var(--sidebar-w); border-right: 1px solid var(--sidebar-border); padding: 20px 0; display: flex; flex-direction: column; flex-shrink: 0; background: var(--sidebar-bg); position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+.sidebar { width: var(--sidebar-w); border-right: 1px solid var(--sidebar-border); padding: 20px 0; display: flex; flex-direction: column; flex-shrink: 0; background: var(--sidebar-bg); }
 .sidebar-brand { padding: 0 20px 20px; border-bottom: 1px solid var(--border); }
 .sidebar-name { font-size: 18px; font-weight: 700; letter-spacing: -0.5px; }
 .sidebar-nav { padding: var(--sp-sm); flex: 1; }
@@ -1497,13 +1470,12 @@ export default {
 .select-field option { background: var(--select-opt-bg); color: var(--select-opt-text); }
 
 /* ========== TABLE ========== */
-.table-header { display: grid; grid-template-columns: 1.4fr 1fr 80px 120px; padding: 10px var(--sp-md); font-size: var(--small-size); color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: .8px; border-bottom: 1px solid var(--border); }
-.table-row { display: grid; grid-template-columns: 1.4fr 1fr 80px 120px; align-items: center; padding: 12px var(--sp-md); cursor: pointer; border-bottom: 1px solid var(--row-border); transition: background var(--anim-dur); }
+.table-header { display: grid; grid-template-columns: 1.2fr 220px 140px 80px 120px; padding: 10px var(--sp-md); font-size: var(--small-size); color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: .8px; border-bottom: 1px solid var(--border); }
+.table-row { display: grid; grid-template-columns: 1.2fr 220px 140px 80px 120px; align-items: center; padding: 12px var(--sp-md); cursor: pointer; border-bottom: 1px solid var(--row-border); transition: background var(--anim-dur); }
 .table-row:hover { background: var(--row-hover); }
 .table-row.selected { background: var(--row-selected); }
 .user-name { font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
 .user-email { margin-top: 2px; }
-.user-dept { margin-top: 1px; font-style: italic; }
 .col-roles { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
 .col-status { display: flex; align-items: center; gap: 6px; }
 
@@ -1587,7 +1559,7 @@ export default {
 .detail-actions { display: flex; gap: var(--sp-sm); padding: var(--sp-sm) var(--sp-lg); border-bottom: 1px solid var(--border); flex-wrap: wrap; }
 .detail-tabs { display: flex; border-bottom: 1px solid var(--border); }
 .detail-tab { flex: 1; padding: 12px var(--sp-sm); background: 0; border: 0; cursor: pointer; font-size: var(--small-size); font-weight: 600; text-transform: uppercase; letter-spacing: .8px; color: var(--text-muted); border-bottom: 2px solid transparent; transition: all .15s; font-family: var(--font); }
-.detail-tab.active { color: var(--detail-tab-active-color); border-bottom-color: var(--detail-tab-active-border); }
+.detail-tab.active { color: var(--nav-active-color); border-bottom-color: var(--nav-active-color); }
 .detail-body { padding: var(--sp-lg); }
 
 /* ========== MODAL ========== */
@@ -1646,11 +1618,65 @@ export default {
 .loader { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; gap: 12px; }
 .spinner { width: 24px; height: 24px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin .8s linear infinite; }
 
-/* ========== TOAST ========== */
-.toast { position: fixed; bottom: 24px; right: 24px; padding: 12px 20px; border-radius: var(--btn-radius); font-size: var(--body-size); font-weight: 500; z-index: 99999; animation: fadeIn var(--anim-dur) var(--anim-ease); }
+/* ========== TOAST STACK ========== */
+.toast-stack {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 99999;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 8px;
+  pointer-events: none;
+}
+.toast {
+  padding: 12px 20px;
+  border-radius: var(--btn-radius);
+  font-size: var(--body-size);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  pointer-events: auto;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  max-width: 420px;
+}
 .toast.success { background: var(--toast-ok-bg); color: var(--toast-ok-text); }
 .toast.error { background: var(--toast-err-bg); color: var(--toast-err-text); }
 .toast.info { background: var(--toast-info-bg); color: var(--toast-info-text); }
+.toast-msg { flex: 1; }
+.toast-close {
+  background: 0;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 2px 4px;
+  opacity: .7;
+  transition: opacity .15s;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.toast-close:hover { opacity: 1; }
+
+/* Toast animations */
+.toast-anim-enter-active {
+  animation: toastSlideIn 300ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.toast-anim-leave-active {
+  animation: toastSlideOut 250ms ease-in forwards;
+}
+.toast-anim-move {
+  transition: transform 300ms ease;
+}
+@keyframes toastSlideIn {
+  from { opacity: 0; transform: translateX(60px) scale(0.95); }
+  to { opacity: 1; transform: translateX(0) scale(1); }
+}
+@keyframes toastSlideOut {
+  from { opacity: 1; transform: translateX(0) scale(1); }
+  to { opacity: 0; transform: translateX(60px) scale(0.9); }
+}
 
 /* ========== COLOR PICKER ========== */
 .color-row { display: flex; align-items: center; gap: var(--sp-md); margin-bottom: var(--sp-sm); flex-wrap: wrap; }
@@ -1666,8 +1692,8 @@ export default {
 @media (max-width: 768px) {
   .sidebar { display: none; }
   .grid-2col { grid-template-columns: 1fr; }
-  .table-header, .table-row { grid-template-columns: 1fr 80px; }
-  .col-roles { display: none; }
+  .table-header, .table-row { grid-template-columns: 1fr 120px 80px; }
+  .col-dept, .col-clients { display: none; }
   .page { padding: var(--sp-md); }
   .detail-panel { width: 100%; }
   .modal { width: 95vw; }
