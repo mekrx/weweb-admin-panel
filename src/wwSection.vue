@@ -263,6 +263,19 @@
               <div class="big-number">{{selectedUser.visible_clients_count}}</div>
               <div class="text-muted text-sm" style="text-align:center">{{L('labelVisibleClients')}}</div>
             </div>
+            <!-- DEPARTMENTS TAB -->
+            <div v-if="detailTab==='departments'">
+              <div class="section-label">{{L('labelUserDepts')}}</div>
+              <div class="odz-grid">
+                <div v-for="o in allOdz" :key="o.id" class="odz-checkbox" :class="{checked:userHasDept(selectedUser, o.id)}">
+                  <div class="checkbox" :class="{active:userHasDept(selectedUser, o.id)}"><span v-if="userHasDept(selectedUser, o.id)">✓</span></div>
+                  {{o.name}}
+                </div>
+              </div>
+              <div class="text-muted text-sm margin-t-md" style="text-align:center">
+                {{countUserDepts(selectedUser)}} {{L('labelOf')}} {{allOdz.length}} {{L('labelDepartments').toLowerCase()}}
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -675,6 +688,8 @@ export default {
         '--nav-active-bg': c.navActiveBg || 'rgba(99,102,241,0.12)',
         '--nav-inactive': c.navInactiveColor || '#8a8880',
         '--nav-hover-bg': c.navHoverBg || 'rgba(99,102,241,0.06)',
+        '--detail-tab-active-color': c.detailTabActiveColor || c.navActiveColor || '#6366f1',
+        '--detail-tab-active-border': c.detailTabActiveBorder || c.navActiveColor || '#6366f1',
         '--action-active-bg': c.actionActiveBg || '#6366f1',
         '--action-active-text': c.actionActiveText || '#ffffff',
         '--action-active-border': c.actionActiveBorder || '#6366f1',
@@ -701,6 +716,7 @@ export default {
       return [
         { id: 'roles', label: this.content.labelTabRoles || 'Role i uprawnienia' },
         { id: 'visibility', label: this.content.labelTabVisibility || 'Widoczność klientów' },
+        { id: 'departments', label: this.content.labelTabDepts || 'Oddziały' },
       ];
     },
 
@@ -708,16 +724,16 @@ export default {
       const s = this.stats;
       const c = this.content;
       const all = [
-        { id: 'managers', v: s.total_managers || 0, l: this.L('labelStatManagers') || 'Aktywni menedżerowie', c: 'var(--status-active)', show: c.showStatManagers !== false },
-        { id: 'clients', v: s.active_clients || 0, l: this.L('labelStatClients') || 'Aktywni klienci', c: 'var(--accent)', show: c.showStatClients !== false },
-        { id: 'vacation', v: s.on_vacation_now || 0, l: this.L('labelStatVacation') || 'Na urlopie', c: 'var(--status-inactive)', show: c.showStatVacation !== false },
-        { id: 'pending', v: s.pending_vacations || 0, l: this.L('labelStatPending') || 'Oczekujące urlopy', c: 'var(--status-terminated)', show: c.showStatPending !== false },
-        { id: 'changes', v: s.recent_changes_24h || 0, l: this.L('labelStatChanges') || 'Zmiany 24h', c: '#8b5cf6', show: c.showStatChanges !== false },
-        { id: 'temp', v: s.active_temp_grants || 0, l: this.L('labelStatTempGrants') || 'Aktywne tymcz. dostępy', c: '#f59e0b', show: c.showStatTempGrants === true },
-        { id: 'roles_count', v: s.total_roles || this.allRoles.length || 0, l: this.L('labelStatRolesCount') || 'Zdefiniowane role', c: '#6366f1', show: c.showStatRolesCount === true },
-        { id: 'depts', v: s.total_departments || this.allOdz.length || 0, l: this.L('labelStatDepts') || 'Oddziały', c: '#0ea5e9', show: c.showStatDepts === true },
+        { id: 'managers', v: s.total_managers || 0, l: this.L('labelStatManagers') || 'Aktywni menedżerowie', c: 'var(--status-active)', show: c.showStatManagers !== false, order: c.orderStatManagers ?? 1 },
+        { id: 'clients', v: s.active_clients || 0, l: this.L('labelStatClients') || 'Aktywni klienci', c: 'var(--accent)', show: c.showStatClients !== false, order: c.orderStatClients ?? 2 },
+        { id: 'vacation', v: s.on_vacation_now || 0, l: this.L('labelStatVacation') || 'Na urlopie', c: 'var(--status-inactive)', show: c.showStatVacation !== false, order: c.orderStatVacation ?? 3 },
+        { id: 'pending', v: s.pending_vacations || 0, l: this.L('labelStatPending') || 'Oczekujące urlopy', c: 'var(--status-terminated)', show: c.showStatPending !== false, order: c.orderStatPending ?? 4 },
+        { id: 'changes', v: s.recent_changes_24h || 0, l: this.L('labelStatChanges') || 'Zmiany 24h', c: '#8b5cf6', show: c.showStatChanges !== false, order: c.orderStatChanges ?? 5 },
+        { id: 'temp', v: s.active_temp_grants || 0, l: this.L('labelStatTempGrants') || 'Aktywne tymcz. dostępy', c: '#f59e0b', show: c.showStatTempGrants === true, order: c.orderStatTempGrants ?? 6 },
+        { id: 'roles_count', v: s.total_roles || this.allRoles.length || 0, l: this.L('labelStatRolesCount') || 'Zdefiniowane role', c: '#6366f1', show: c.showStatRolesCount === true, order: c.orderStatRolesCount ?? 7 },
+        { id: 'depts', v: s.total_departments || this.allOdz.length || 0, l: this.L('labelStatDepts') || 'Oddziały', c: '#0ea5e9', show: c.showStatDepts === true, order: c.orderStatDepts ?? 8 },
       ];
-      return all.filter(x => x.show);
+      return all.filter(x => x.show).sort((a, b) => a.order - b.order);
     },
 
     filteredUsers() {
@@ -1325,6 +1341,20 @@ export default {
       return e && (new Date(e) - new Date() < 3600000);
     },
 
+    userHasDept(user, deptId) {
+      if (!user) return false;
+      const ids = user.allowed_oddzial_ids;
+      if (ids === null || ids === undefined) return true; // null means all departments
+      return Array.isArray(ids) && ids.includes(deptId);
+    },
+
+    countUserDepts(user) {
+      if (!user) return 0;
+      const ids = user.allowed_oddzial_ids;
+      if (ids === null || ids === undefined) return this.allOdz.length;
+      return Array.isArray(ids) ? ids.length : 0;
+    },
+
     showToast(msg, type = 'info') {
       this.toast = { message: msg, type };
       setTimeout(() => { this.toast = null; }, 3500);
@@ -1499,7 +1529,7 @@ export default {
 .detail-actions { display: flex; gap: var(--sp-sm); padding: var(--sp-sm) var(--sp-lg); border-bottom: 1px solid var(--border); flex-wrap: wrap; }
 .detail-tabs { display: flex; border-bottom: 1px solid var(--border); }
 .detail-tab { flex: 1; padding: 12px var(--sp-sm); background: 0; border: 0; cursor: pointer; font-size: var(--small-size); font-weight: 600; text-transform: uppercase; letter-spacing: .8px; color: var(--text-muted); border-bottom: 2px solid transparent; transition: all .15s; font-family: var(--font); }
-.detail-tab.active { color: var(--nav-active-color); border-bottom-color: var(--nav-active-color); }
+.detail-tab.active { color: var(--detail-tab-active-color); border-bottom-color: var(--detail-tab-active-border); }
 .detail-body { padding: var(--sp-lg); }
 
 /* ========== MODAL ========== */
