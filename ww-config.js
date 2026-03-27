@@ -55,7 +55,13 @@ export default {
             ['labelAuditAllTables','labelAuditEmailPlaceholder','labelNoAuditEntries','labelAuditSelectUsers','labelAuditShowing'],
             ['labelNoTempGrants'],
             ['labelConfirmDeleteRole','labelConfirmDeleteRoleTitle','labelConfirmRemoveRole','labelConfirmRemoveRoleTitle','labelConfirmRevoke','labelConfirmRevokeTitle'],
-            ['iconNavDashboard','iconNavUsers','iconNavRoles','iconNavAudit','iconNavTemp','navIconSize','navIconColor'],
+            ['actionSelectBg','actionSelectText','actionInsertBg','actionInsertText','actionUpdateBg','actionUpdateText','actionDeleteBg','actionDeleteText','actionAllBg','actionAllText'],
+            ['badgeSaBg','badgeSaText','changePositiveColor','changeNegativeColor'],
+            ['tempBadgeBg','tempBadgeText','tempUrgentBg','tempUrgentText','scrollbarThumb'],
+            ['labelMatrix','labelRequests','labelAllStatuses','labelAllDepts','labelBtnExport','labelToday','labelDays','labelHistory'],
+            ['labelEmptyUsers','labelEmptyAudit','labelEmptyTemp','labelEmptyRoles'],
+            ['labelTabHistory','labelBulkSelected','labelBulkAddRole','labelBulkAddDept','labelContrastWarning'],
+            ['iconNavDashboard','iconNavUsers','iconNavRoles','iconNavAudit','iconNavTemp','iconNavMatrix','iconNavRequests','navIconSize','navIconColor'],
             ['iconSetup','iconTempIndicator','iconClose','iconEdit','iconDelete','iconCheckmark','iconSize']
         ]
     },
@@ -443,5 +449,53 @@ export default {
         iconDelete: { label:{en:'Icon: Delete', pl:'Ikona: Usuń'}, type:'SystemIcon', bindable:true },
         iconCheckmark: { label:{en:'Icon: Checkmark', pl:'Ikona: Zaznaczenie'}, type:'SystemIcon', bindable:true },
         iconSize: { label:{en:'General Icon Size', pl:'Rozmiar ikon ogólnych'}, type:'Length', options:{unitChoices:[{value:'px',label:'px',min:8,max:32}]}, defaultValue:'14px', bindable:true, responsive:true },
+
+        // === NEW ICONS ===
+        iconNavMatrix: { label:{en:'Icon: Matrix nav', pl:'Ikona: Matryca'}, type:'SystemIcon', bindable:true },
+        iconNavRequests: { label:{en:'Icon: Requests nav', pl:'Ikona: Wnioski'}, type:'SystemIcon', bindable:true },
+
+        // === ACTION BADGE COLORS ===
+        actionSelectBg: { label:{en:'Action Select BG'}, type:'Color', defaultValue:'#1b3a4e', bindable:true, responsive:true },
+        actionSelectText: { label:{en:'Action Select Text'}, type:'Color', defaultValue:'#b8e0ff', bindable:true, responsive:true },
+        actionInsertBg: { label:{en:'Action Insert BG'}, type:'Color', defaultValue:'#1b4e3a', bindable:true, responsive:true },
+        actionInsertText: { label:{en:'Action Insert Text'}, type:'Color', defaultValue:'#b8ffd4', bindable:true, responsive:true },
+        actionUpdateBg: { label:{en:'Action Update BG'}, type:'Color', defaultValue:'#4e3a1b', bindable:true, responsive:true },
+        actionUpdateText: { label:{en:'Action Update Text'}, type:'Color', defaultValue:'#ffd4b8', bindable:true, responsive:true },
+        actionDeleteBg: { label:{en:'Action Delete BG'}, type:'Color', defaultValue:'#4e1b1b', bindable:true, responsive:true },
+        actionDeleteText: { label:{en:'Action Delete Text'}, type:'Color', defaultValue:'#ffb8b8', bindable:true, responsive:true },
+        actionAllBg: { label:{en:'Action All BG'}, type:'Color', defaultValue:'#2d1b4e', bindable:true, responsive:true },
+        actionAllText: { label:{en:'Action All Text'}, type:'Color', defaultValue:'#d4b8ff', bindable:true, responsive:true },
+
+        // === SPECIAL BADGES ===
+        badgeSaBg: { label:{en:'SuperAdmin Badge BG'}, type:'Color', defaultValue:'#f59e0b', bindable:true, responsive:true },
+        badgeSaText: { label:{en:'SuperAdmin Badge Text'}, type:'Color', defaultValue:'#000000', bindable:true, responsive:true },
+        changePositiveColor: { label:{en:'Change Positive (green)'}, type:'Color', defaultValue:'#22c55e', bindable:true, responsive:true },
+        changeNegativeColor: { label:{en:'Change Negative (red)'}, type:'Color', defaultValue:'#ef4444', bindable:true, responsive:true },
+
+        // === TEMP BADGE COLORS ===
+        tempBadgeBg: { label:{en:'Temp Badge BG'}, type:'Color', defaultValue:'rgba(245,158,11,0.12)', bindable:true, responsive:true },
+        tempBadgeText: { label:{en:'Temp Badge Text'}, type:'Color', defaultValue:'#f59e0b', bindable:true, responsive:true },
+        tempUrgentBg: { label:{en:'Temp Urgent BG'}, type:'Color', defaultValue:'rgba(239,68,68,0.12)', bindable:true, responsive:true },
+        tempUrgentText: { label:{en:'Temp Urgent Text'}, type:'Color', defaultValue:'#ef4444', bindable:true, responsive:true },
+        scrollbarThumb: { label:{en:'Scrollbar Thumb'}, type:'Color', defaultValue:'#333333', bindable:true, responsive:true },
+
+        // === NEW LABELS ===
+        labelMatrix: { label:{en:'Matrix page title', pl:'Tytuł: Matryca'}, type:'Text', defaultValue:'', bindable:true },
+        labelRequests: { label:{en:'Requests page title', pl:'Tytuł: Wnioski'}, type:'Text', defaultValue:'', bindable:true },
+        labelAllStatuses: { label:{en:'All Statuses filter', pl:'Filtr: Wszystkie statusy'}, type:'Text', defaultValue:'', bindable:true },
+        labelAllDepts: { label:{en:'All Departments filter', pl:'Filtr: Wszystkie oddziały'}, type:'Text', defaultValue:'', bindable:true },
+        labelBtnExport: { label:{en:'Export button', pl:'Przycisk: Eksport'}, type:'Text', defaultValue:'', bindable:true },
+        labelToday: { label:{en:'Today preset', pl:'Preset: Dziś'}, type:'Text', defaultValue:'', bindable:true },
+        labelDays: { label:{en:'Days label', pl:'Label: dni'}, type:'Text', defaultValue:'', bindable:true },
+        labelHistory: { label:{en:'History tab', pl:'Zakładka: Historia'}, type:'Text', defaultValue:'', bindable:true },
+        labelTabHistory: { label:{en:'Detail tab: History', pl:'Zakładka detalu: Historia'}, type:'Text', defaultValue:'', bindable:true },
+        labelEmptyUsers: { label:{en:'Empty: Users', pl:'Pusty: Użytkownicy'}, type:'Text', defaultValue:'', bindable:true },
+        labelEmptyAudit: { label:{en:'Empty: Audit', pl:'Pusty: Audyt'}, type:'Text', defaultValue:'', bindable:true },
+        labelEmptyTemp: { label:{en:'Empty: Temp grants', pl:'Pusty: Tymczasowe'}, type:'Text', defaultValue:'', bindable:true },
+        labelEmptyRoles: { label:{en:'Empty: Roles', pl:'Pusty: Role'}, type:'Text', defaultValue:'', bindable:true },
+        labelBulkSelected: { label:{en:'Bulk: Selected', pl:'Zaznaczono'}, type:'Text', defaultValue:'', bindable:true },
+        labelBulkAddRole: { label:{en:'Bulk: Add role', pl:'Dodaj rolę wszystkim'}, type:'Text', defaultValue:'', bindable:true },
+        labelBulkAddDept: { label:{en:'Bulk: Add dept', pl:'Dodaj oddział wszystkim'}, type:'Text', defaultValue:'', bindable:true },
+        labelContrastWarning: { label:{en:'Contrast warning', pl:'Ostrzeżenie o kontraście'}, type:'Text', defaultValue:'', bindable:true },
     }
 };
