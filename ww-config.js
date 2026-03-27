@@ -108,17 +108,17 @@ export default {
         statusActiveColor: { label:{en:'Active Dot'}, type:'Color', defaultValue:'#22c55e', bindable:true },
         statusInactiveColor: { label:{en:'Inactive Dot'}, type:'Color', defaultValue:'#eab308', bindable:true },
         statusTerminatedColor: { label:{en:'Terminated Dot'}, type:'Color', defaultValue:'#ef4444', bindable:true },
-        statusVacationColor: { label:{en:'Vacation Dot'}, type:'Color', defaultValue:'#6366f1', bindable:true },
+        statusVacationColor: { label:{en:'Vacation Dot'}, type:'Color', defaultValue:'#4B8765', bindable:true },
         statusActiveTextColor: { label:{en:'Active Text'}, type:'Color', defaultValue:'#22c55e', bindable:true },
         statusInactiveTextColor: { label:{en:'Inactive Text'}, type:'Color', defaultValue:'#eab308', bindable:true },
         statusTerminatedTextColor: { label:{en:'Terminated Text'}, type:'Color', defaultValue:'#ef4444', bindable:true },
-        statusVacationTextColor: { label:{en:'Vacation Text'}, type:'Color', defaultValue:'#6366f1', bindable:true },
+        statusVacationTextColor: { label:{en:'Vacation Text'}, type:'Color', defaultValue:'#4B8765', bindable:true },
 
         // === DEPARTMENT TEMP INDICATORS ===
         odzTempBorder: { label:{en:'Dept Temp Border', pl:'Oddział tymczasowy: ramka'}, type:'Color', defaultValue:'#f59e0b', bindable:true },
         odzTempBg: { label:{en:'Dept Temp BG', pl:'Oddział tymczasowy: tło'}, type:'Color', defaultValue:'rgba(245,158,11,0.1)', bindable:true },
         odzTempText: { label:{en:'Dept Temp Text', pl:'Oddział tymczasowy: tekst'}, type:'Color', defaultValue:'#f59e0b', bindable:true },
-        odzIndicatorOn: { label:{en:'Dept Indicator On', pl:'Wskaźnik oddziału: aktywny'}, type:'Color', defaultValue:'#6366f1', bindable:true },
+        odzIndicatorOn: { label:{en:'Dept Indicator On', pl:'Wskaźnik oddziału: aktywny'}, type:'Color', defaultValue:'#4B8765', bindable:true },
         odzIndicatorOff: { label:{en:'Dept Indicator Off', pl:'Wskaźnik oddziału: nieaktywny'}, type:'Color', defaultValue:'#333333', bindable:true },
         odzTempIndicator: { label:{en:'Dept Temp Indicator', pl:'Oddział tymczasowy: wskaźnik'}, type:'Color', defaultValue:'#f59e0b', bindable:true },
         tempIndicatorColor: { label:{en:'Temp Icon Color', pl:'Kolor ikony tymczasowej'}, type:'Color', defaultValue:'#f59e0b', bindable:true },
@@ -143,8 +143,8 @@ export default {
         // === CHART ===
         chartBg: { label:{en:'Chart BG'}, type:'Color', defaultValue:'transparent', bindable:true },
         chartBorder: { label:{en:'Chart Border'}, type:'Color', defaultValue:'#2a2a28', bindable:true },
-        chartLineColor: { label:{en:'Chart Line Color'}, type:'Color', defaultValue:'#6366f1', bindable:true },
-        chartDotColor: { label:{en:'Chart Dot Color'}, type:'Color', defaultValue:'#818cf8', bindable:true },
+        chartLineColor: { label:{en:'Chart Line Color'}, type:'Color', defaultValue:'#4B8765', bindable:true },
+        chartDotColor: { label:{en:'Chart Dot Color'}, type:'Color', defaultValue:'#6BAA85', bindable:true },
         chartDotSize: { label:{en:'Chart Dot Size'}, type:'Length', options:{unitChoices:[{value:'px',label:'px',min:2,max:8}]}, defaultValue:'4px', bindable:true },
         chartGridColor: { label:{en:'Chart Grid Color'}, type:'Color', defaultValue:'rgba(255,255,255,0.05)', bindable:true },
         chartLabelColor: { label:{en:'Chart Label Color'}, type:'Color', defaultValue:'#8a8880', bindable:true },
@@ -153,12 +153,12 @@ export default {
 
         // === STAT CARD ACCENT COLORS ===
         statManagersColor: { label:{en:'Stat color: Managers', pl:'Kolor paska: Menedżerowie'}, type:'Color', defaultValue:'#22c55e', bindable:true },
-        statClientsColor: { label:{en:'Stat color: Clients', pl:'Kolor paska: Klienci'}, type:'Color', defaultValue:'#6366f1', bindable:true },
+        statClientsColor: { label:{en:'Stat color: Clients', pl:'Kolor paska: Klienci'}, type:'Color', defaultValue:'#4B8765', bindable:true },
         statVacationColor: { label:{en:'Stat color: Vacation', pl:'Kolor paska: Urlopy'}, type:'Color', defaultValue:'#eab308', bindable:true },
         statPendingColor: { label:{en:'Stat color: Pending', pl:'Kolor paska: Oczekujące'}, type:'Color', defaultValue:'#ef4444', bindable:true },
         statChangesColor: { label:{en:'Stat color: Changes', pl:'Kolor paska: Zmiany'}, type:'Color', defaultValue:'#8b5cf6', bindable:true },
         statTempColor: { label:{en:'Stat color: Temp Grants', pl:'Kolor paska: Tymczasowe'}, type:'Color', defaultValue:'#f59e0b', bindable:true },
-        statRolesColor: { label:{en:'Stat color: Roles', pl:'Kolor paska: Role'}, type:'Color', defaultValue:'#6366f1', bindable:true },
+        statRolesColor: { label:{en:'Stat color: Roles', pl:'Kolor paska: Role'}, type:'Color', defaultValue:'#4B8765', bindable:true },
         statDeptsColor: { label:{en:'Stat color: Departments', pl:'Kolor paska: Oddziały'}, type:'Color', defaultValue:'#0ea5e9', bindable:true },
 
         // === ICONS — NAV ===
@@ -255,7 +255,7 @@ export default {
         labelBtnEditPerms: { label:{en:'Btn: Edit permissions', pl:'Przycisk: Edytuj uprawnienia'}, type:'Text', defaultValue:'Edytuj', bindable:true },
         labelBtnApply: { label:{en:'Btn: Apply copy', pl:'Przycisk: Zastosuj kopię'}, type:'Text', defaultValue:'Zastosuj kopię', bindable:true },
         labelBtnApplyModified: { label:{en:'Btn: Apply modified', pl:'Przycisk: Zastosuj ze zmianami'}, type:'Text', defaultValue:'Zastosuj ze zmianami', bindable:true },
-        labelBtnExtend: { label:{en:'Btn: Extend', pl:'Przycisk: Przedłuż'}, type:'Text', defaultValue:'Przedłuż', bindable:true },
+        labelBtnExtend: { label:{en:'Btn: Edit temp', pl:'Przycisk: Edytuj tymcz.'}, type:'Text', defaultValue:'Edytuj', bindable:true },
         labelBtnRevoke: { label:{en:'Btn: Revoke', pl:'Przycisk: Cofnij'}, type:'Text', defaultValue:'Cofnij', bindable:true },
         labelBtnExport: { label:{en:'Export button', pl:'Przycisk: Eksport'}, type:'Text', defaultValue:'', bindable:true },
         labelBulkSelected: { label:{en:'Bulk: Selected', pl:'Zaznaczono'}, type:'Text', defaultValue:'', bindable:true },
