@@ -3,66 +3,164 @@ export default {
         label: { en: 'Admin Panel', pl: 'Panel administracyjny' },
         icon: 'settings',
         customStylePropertiesOrder: [
+            // --- CONNECTION ---
+            {label:{en:'Connection',pl:'Połączenie'}},
             ['supabaseUrl', 'supabaseAnonKey'],
-            ['showSidebar','labelSidebarTitle','labelSidebarSubtitle','sidebarWidth','sidebarBgColor','sidebarBorderColor','sidebarTopOffset','sidebarZIndex'],
-            ['navActiveColor','navActiveBg','navInactiveColor','navHoverBg'],
-            ['detailTabActiveColor','detailTabActiveBorder'],
+
+            // --- LAYOUT ---
+            {label:{en:'Layout',pl:'Układ'}},
+            ['showSidebar','sidebarWidth','sidebarBgColor','sidebarBorderColor','sidebarTopOffset','sidebarZIndex'],
             ['contentPadding','contentMaxWidth'],
+
+            // --- COLORS ---
+            {label:{en:'Colors',pl:'Kolory'}},
             ['accentColor','accentHoverColor','bgColor','cardBgColor','cardBorderRadius'],
             ['borderColor','borderLightColor'],
             ['textColor','textMutedColor','textHintColor'],
+
+            // --- TYPOGRAPHY ---
+            {label:{en:'Typography',pl:'Typografia'}},
             ['titleFontSize','titleFontWeight','bodyFontSize','smallFontSize','fontFamily'],
+
+            // --- NAVIGATION ---
+            {label:{en:'Navigation',pl:'Nawigacja'}},
+            ['navActiveColor','navActiveBg','navInactiveColor','navHoverBg'],
+            ['detailTabActiveColor','detailTabActiveBorder'],
+
+            // --- BADGES ---
+            {label:{en:'Badges',pl:'Odznaki'}},
             ['badgeFontSize','badgePadding','badgeBorderRadius','tableRoleBadgeSize','tableDeptBadgeSize'],
+            ['badgeSaBg','badgeSaText'],
+
+            // --- FORM ELEMENTS ---
+            {label:{en:'Inputs & Selects',pl:'Pola formularzy'}},
             ['inputBgColor','inputBorderColor','inputFocusBorderColor','inputBorderRadius','inputPadding','inputFontSize'],
             ['selectBgColor','selectTextColor','selectBorderColor','selectFontSize','selectOptionBg','selectOptionText','selectBorderRadius','selectHoverBg','selectHoverText'],
-            ['btnPrimaryBg','btnPrimaryText','btnPrimaryBorder','btnSecondaryBg','btnSecondaryText','btnSecondaryBorder','btnBorderRadius','btnPadding','btnFontSize'],
+
+            // --- BUTTONS ---
+            {label:{en:'Buttons',pl:'Przyciski'}},
+            ['btnPrimaryBg','btnPrimaryText','btnPrimaryBorder','btnBorderRadius','btnPadding','btnFontSize'],
+            ['btnSecondaryBg','btnSecondaryText','btnSecondaryBorder'],
             ['btnGhostBg','btnGhostText','btnGhostBorder','btnGhostHoverBorder'],
             ['btnDangerColor','btnDangerBg','btnDangerBorder'],
             ['btnCloseBg','btnCloseText','btnCloseHoverBg','btnCloseHoverText','btnCloseSize','btnCloseBorderRadius'],
+
+            // --- TABLE ---
+            {label:{en:'Table',pl:'Tabela'}},
             ['tableHeaderBg','tableRowHoverBg','tableRowSelectedBg','tableRowBorderColor'],
+
+            // --- STATUS ---
+            {label:{en:'Status indicators',pl:'Wskaźniki statusu'}},
             ['statusActiveColor','statusInactiveColor','statusTerminatedColor','statusVacationColor'],
             ['statusActiveTextColor','statusInactiveTextColor','statusTerminatedTextColor','statusVacationTextColor'],
+
+            // --- ACTION BADGES (CRUD) ---
+            {label:{en:'Action badges (S/I/U/D)',pl:'Odznaki akcji (S/I/U/D)'}},
             ['actionActiveBg','actionActiveText','actionActiveBorder'],
-            ['odzActiveBg','odzActiveBorder','odzActiveText','odzInactiveBg','odzInactiveBorder','odzInactiveText','odzTempBorder','odzTempBg','odzTempText','odzTempIndicator','odzIndicatorOn','odzIndicatorOff','tempIndicatorColor','tempRoleBorder'],
-            ['labelRoleColor'],
+            ['actionSelectBg','actionSelectText','actionInsertBg','actionInsertText','actionUpdateBg','actionUpdateText','actionDeleteBg','actionDeleteText','actionAllBg','actionAllText'],
+
+            // --- DEPARTMENTS ---
+            {label:{en:'Departments view',pl:'Widok oddziałów'}},
+            ['odzActiveBg','odzActiveBorder','odzActiveText','odzInactiveBg','odzInactiveBorder','odzInactiveText'],
+            ['odzTempBorder','odzTempBg','odzTempText','odzTempIndicator','odzIndicatorOn','odzIndicatorOff'],
+
+            // --- TEMP ACCESS ---
+            {label:{en:'Temporary access',pl:'Dostęp tymczasowy'}},
+            ['tempIndicatorColor','tempRoleBorder'],
+            ['tempBadgeBg','tempBadgeText','tempUrgentBg','tempUrgentText'],
+
+            // --- CHANGES INDICATORS ---
+            {label:{en:'Change indicators',pl:'Wskaźniki zmian'}},
+            ['changePositiveColor','changeNegativeColor'],
+            ['diffPositiveColor','diffNegativeColor','diffNeutralColor'],
+
+            // --- MODALS & OVERLAYS ---
+            {label:{en:'Modals & Panels',pl:'Modalne i panele'}},
             ['overlayBgColor','panelWidth','panelBgColor'],
             ['modalBgColor','modalBorderRadius','modalMaxWidth','modalPadding'],
+
+            // --- TOASTS ---
+            {label:{en:'Toast notifications',pl:'Powiadomienia'}},
             ['toastSuccessBg','toastSuccessText','toastErrorBg','toastErrorText','toastInfoBg','toastInfoText'],
+
+            // --- CHART ---
+            {label:{en:'Dashboard chart',pl:'Wykres na dashboardzie'}},
             ['chartBg','chartBorder','chartLineColor','chartLineWidth','chartDotColor','chartDotSize','chartGridColor','chartLabelColor','chartHeight','chartAreaOpacity','dateIconFilter'],
-            ['diffPositiveColor','diffNegativeColor','diffNeutralColor'],
+
+            // --- ANIMATION & SPACING ---
+            {label:{en:'Animation & Spacing',pl:'Animacje i odstępy'}},
             ['animationDuration','animationEasing'],
             ['spacingXs','spacingSm','spacingMd','spacingLg','spacingXl'],
-            ['labelDashboard','labelUsers','labelRoles','labelAudit','labelTemp'],
+
+            // --- SCROLLBAR ---
+            {label:{en:'Scrollbar',pl:'Pasek przewijania'}},
+            ['scrollbarThumb'],
+
+            // --- ROLE COLORS ---
+            {label:{en:'Role colors',pl:'Kolory ról'}},
+            ['labelRoleColor'],
+
+            // --- ICONS ---
+            {label:{en:'Icons',pl:'Ikony'}},
+            ['iconNavDashboard','iconNavUsers','iconNavRoles','iconNavAudit','iconNavTemp','iconNavMatrix','iconNavRequests','navIconSize','navIconColor'],
+            ['iconSetup','iconTempIndicator','iconClose','iconEdit','iconDelete','iconCheckmark','iconSize'],
+
+            // --- STAT CARDS ---
+            {label:{en:'Dashboard stats',pl:'Statystyki na dashboardzie'}},
             ['labelStatManagers','labelStatClients','labelStatVacation','labelStatPending','labelStatChanges','labelStatTempGrants','labelStatRolesCount','labelStatDepts'],
             ['showStatManagers','showStatClients','showStatVacation','showStatPending','showStatChanges','showStatTempGrants','showStatRolesCount','showStatDepts'],
             ['orderStatManagers','orderStatClients','orderStatVacation','orderStatPending','orderStatChanges','orderStatTempGrants','orderStatRolesCount','orderStatDepts'],
+
+            // --- LABELS: NAVIGATION ---
+            {label:{en:'Labels: Navigation',pl:'Teksty: Nawigacja'}},
+            ['labelSidebarTitle','labelSidebarSubtitle'],
+            ['labelDashboard','labelUsers','labelRoles','labelAudit','labelTemp','labelMatrix','labelRequests'],
+
+            // --- LABELS: DASHBOARD ---
+            {label:{en:'Labels: Dashboard',pl:'Teksty: Dashboard'}},
             ['labelRolesDistribution','labelDepartments','labelClientsChart','labelDiffPeriod'],
+
+            // --- LABELS: TABLE ---
+            {label:{en:'Labels: Users table',pl:'Teksty: Tabela użytkowników'}},
             ['labelColUser','labelColRoles','labelColDepts','labelColClients','labelColStatus'],
             ['labelStatusActive','labelStatusInactive','labelStatusTerminated','labelStatusVacation'],
+            ['labelSearch','labelAllRoles','labelAllStatuses','labelAllDepts','labelNoResults','labelSuperAdmin','labelVacation','labelPrev','labelNext'],
+            ['labelEmptyUsers','labelEmptyAudit','labelEmptyTemp','labelEmptyRoles'],
+
+            // --- LABELS: BUTTONS ---
+            {label:{en:'Labels: Buttons',pl:'Teksty: Przyciski'}},
             ['labelBtnCopy','labelBtnAddRole','labelBtnTempAccess','labelBtnNewRole','labelBtnEditRole','labelBtnEditPerms','labelBtnApply','labelBtnApplyModified'],
-            ['labelBtnExtend','labelBtnRevoke','labelGrantedBy','labelGrantedAt','labelExpiresAt'],
-            ['labelSearch','labelAllRoles','labelNoResults','labelSuperAdmin','labelVacation','labelPrev','labelNext'],
-            ['labelTabRoles','labelTabVisibility','labelTabDepts','labelUserDepts','labelAllDeptsAccess','labelAssignedRoles','labelPermissions','labelVisibleClients'],
-            ['labelAutoFromRoles','labelNoRoles','labelSuperAdminAccess','labelNoPermissions','labelAllRolesAssigned'],
-            ['labelAddRoleFor','labelDept'],
-            ['labelCopyFrom','labelSelectTarget','labelReviewCopy','labelChangeTarget','labelChanged','labelSummary','labelTarget','labelNone','labelOf','labelSelectAll','labelClearAll'],
+            ['labelBtnExtend','labelBtnRevoke','labelBtnExport'],
+            ['labelBulkSelected','labelBulkAddRole','labelBulkAddDept'],
+            ['labelSave','labelCreate','labelCancel','labelConfirm'],
+
+            // --- LABELS: DETAIL PANEL ---
+            {label:{en:'Labels: Detail panel',pl:'Teksty: Panel szczegółów'}},
+            ['labelTabRoles','labelTabVisibility','labelTabDepts','labelTabHistory'],
+            ['labelAssignedRoles','labelPermissions','labelVisibleClients','labelAutoFromRoles','labelNoRoles','labelSuperAdminAccess','labelNoPermissions'],
+            ['labelUserDepts','labelAllDeptsAccess','labelDept','labelAllRolesAssigned'],
+            ['labelHistory','labelGrantedBy','labelGrantedAt','labelExpiresAt'],
+
+            // --- LABELS: MODALS ---
+            {label:{en:'Labels: Modals',pl:'Teksty: Modalne'}},
+            ['labelAddRoleFor','labelCopyFrom','labelSelectTarget','labelReviewCopy','labelChangeTarget','labelChanged','labelSummary','labelTarget','labelNone','labelOf','labelSelectAll','labelClearAll'],
             ['labelTempAccessFor','labelTempType','labelTempRole','labelTempDept','labelTempExpires','labelTempReason','labelTempReasonPlaceholder','labelTempApply'],
             ['labelSelectRole','labelSelectDepts'],
-            ['labelExtendAccess','labelNewExpiry','labelSave','labelCreate','labelCancel','labelConfirm'],
+            ['labelExtendAccess','labelNewExpiry','labelExtendReason','labelExtendReasonPlaceholder'],
             ['labelNewRole','labelRoleNamePlaceholder','labelEditRole','labelTemplates','labelSelectTable','labelAddTemplate','labelNoTemplates'],
             ['labelRolesHint','labelUsersCount','labelLegendSelect','labelLegendInsert','labelLegendUpdate','labelLegendDelete','labelLegendAll'],
             ['labelEditPermsFor','labelEditPermsHint','labelAddPermission'],
+            ['labelContrastWarning'],
+
+            // --- LABELS: AUDIT ---
+            {label:{en:'Labels: Audit',pl:'Teksty: Audyt'}},
             ['labelAuditAllTables','labelAuditEmailPlaceholder','labelNoAuditEntries','labelAuditSelectUsers','labelAuditShowing'],
+            ['labelToday','labelDays'],
+
+            // --- LABELS: TEMP & CONFIRM ---
+            {label:{en:'Labels: Temp & Confirm',pl:'Teksty: Tymczasowe i potwierdzenia'}},
             ['labelNoTempGrants'],
-            ['labelConfirmDeleteRole','labelConfirmDeleteRoleTitle','labelConfirmRemoveRole','labelConfirmRemoveRoleTitle','labelConfirmRevoke','labelConfirmRevokeTitle'],
-            ['actionSelectBg','actionSelectText','actionInsertBg','actionInsertText','actionUpdateBg','actionUpdateText','actionDeleteBg','actionDeleteText','actionAllBg','actionAllText'],
-            ['badgeSaBg','badgeSaText','changePositiveColor','changeNegativeColor'],
-            ['tempBadgeBg','tempBadgeText','tempUrgentBg','tempUrgentText','scrollbarThumb'],
-            ['labelMatrix','labelRequests','labelAllStatuses','labelAllDepts','labelBtnExport','labelToday','labelDays','labelHistory'],
-            ['labelEmptyUsers','labelEmptyAudit','labelEmptyTemp','labelEmptyRoles'],
-            ['labelTabHistory','labelBulkSelected','labelBulkAddRole','labelBulkAddDept','labelContrastWarning'],
-            ['iconNavDashboard','iconNavUsers','iconNavRoles','iconNavAudit','iconNavTemp','iconNavMatrix','iconNavRequests','navIconSize','navIconColor'],
-            ['iconSetup','iconTempIndicator','iconClose','iconEdit','iconDelete','iconCheckmark','iconSize']
+            ['labelConfirmDeleteRole','labelConfirmDeleteRoleTitle','labelConfirmRemoveRole','labelConfirmRemoveRoleTitle','labelConfirmRevoke','labelConfirmRevokeTitle']
         ]
     },
     properties: {
@@ -455,29 +553,29 @@ export default {
         iconNavRequests: { label:{en:'Icon: Requests nav', pl:'Ikona: Wnioski'}, type:'SystemIcon', bindable:true },
 
         // === ACTION BADGE COLORS ===
-        actionSelectBg: { label:{en:'Action Select BG'}, type:'Color', defaultValue:'#1b3a4e', bindable:true, responsive:true },
-        actionSelectText: { label:{en:'Action Select Text'}, type:'Color', defaultValue:'#b8e0ff', bindable:true, responsive:true },
-        actionInsertBg: { label:{en:'Action Insert BG'}, type:'Color', defaultValue:'#1b4e3a', bindable:true, responsive:true },
-        actionInsertText: { label:{en:'Action Insert Text'}, type:'Color', defaultValue:'#b8ffd4', bindable:true, responsive:true },
-        actionUpdateBg: { label:{en:'Action Update BG'}, type:'Color', defaultValue:'#4e3a1b', bindable:true, responsive:true },
-        actionUpdateText: { label:{en:'Action Update Text'}, type:'Color', defaultValue:'#ffd4b8', bindable:true, responsive:true },
-        actionDeleteBg: { label:{en:'Action Delete BG'}, type:'Color', defaultValue:'#4e1b1b', bindable:true, responsive:true },
-        actionDeleteText: { label:{en:'Action Delete Text'}, type:'Color', defaultValue:'#ffb8b8', bindable:true, responsive:true },
-        actionAllBg: { label:{en:'Action All BG'}, type:'Color', defaultValue:'#2d1b4e', bindable:true, responsive:true },
-        actionAllText: { label:{en:'Action All Text'}, type:'Color', defaultValue:'#d4b8ff', bindable:true, responsive:true },
+        actionSelectBg: { label:{en:'SELECT badge bg',pl:'SELECT — tło'}, type:'Color', defaultValue:'#1b3a4e', bindable:true, responsive:true },
+        actionSelectText: { label:{en:'SELECT badge text',pl:'SELECT — tekst'}, type:'Color', defaultValue:'#b8e0ff', bindable:true, responsive:true },
+        actionInsertBg: { label:{en:'INSERT badge bg',pl:'INSERT — tło'}, type:'Color', defaultValue:'#1b4e3a', bindable:true, responsive:true },
+        actionInsertText: { label:{en:'INSERT badge text',pl:'INSERT — tekst'}, type:'Color', defaultValue:'#b8ffd4', bindable:true, responsive:true },
+        actionUpdateBg: { label:{en:'UPDATE badge bg',pl:'UPDATE — tło'}, type:'Color', defaultValue:'#4e3a1b', bindable:true, responsive:true },
+        actionUpdateText: { label:{en:'UPDATE badge text',pl:'UPDATE — tekst'}, type:'Color', defaultValue:'#ffd4b8', bindable:true, responsive:true },
+        actionDeleteBg: { label:{en:'DELETE badge bg',pl:'DELETE — tło'}, type:'Color', defaultValue:'#4e1b1b', bindable:true, responsive:true },
+        actionDeleteText: { label:{en:'DELETE badge text',pl:'DELETE — tekst'}, type:'Color', defaultValue:'#ffb8b8', bindable:true, responsive:true },
+        actionAllBg: { label:{en:'ALL badge bg',pl:'ALL — tło'}, type:'Color', defaultValue:'#2d1b4e', bindable:true, responsive:true },
+        actionAllText: { label:{en:'ALL badge text',pl:'ALL — tekst'}, type:'Color', defaultValue:'#d4b8ff', bindable:true, responsive:true },
 
         // === SPECIAL BADGES ===
-        badgeSaBg: { label:{en:'SuperAdmin Badge BG'}, type:'Color', defaultValue:'#f59e0b', bindable:true, responsive:true },
-        badgeSaText: { label:{en:'SuperAdmin Badge Text'}, type:'Color', defaultValue:'#000000', bindable:true, responsive:true },
-        changePositiveColor: { label:{en:'Change Positive (green)'}, type:'Color', defaultValue:'#22c55e', bindable:true, responsive:true },
-        changeNegativeColor: { label:{en:'Change Negative (red)'}, type:'Color', defaultValue:'#ef4444', bindable:true, responsive:true },
+        badgeSaBg: { label:{en:'SuperAdmin badge bg',pl:'SuperAdmin — tło odznaki'}, type:'Color', defaultValue:'#f59e0b', bindable:true, responsive:true },
+        badgeSaText: { label:{en:'SuperAdmin badge text',pl:'SuperAdmin — tekst odznaki'}, type:'Color', defaultValue:'#000000', bindable:true, responsive:true },
+        changePositiveColor: { label:{en:'Positive change (green)',pl:'Zmiana pozytywna (zielony)'}, type:'Color', defaultValue:'#22c55e', bindable:true, responsive:true },
+        changeNegativeColor: { label:{en:'Negative change (red)',pl:'Zmiana negatywna (czerwony)'}, type:'Color', defaultValue:'#ef4444', bindable:true, responsive:true },
 
         // === TEMP BADGE COLORS ===
-        tempBadgeBg: { label:{en:'Temp Badge BG'}, type:'Color', defaultValue:'rgba(245,158,11,0.12)', bindable:true, responsive:true },
-        tempBadgeText: { label:{en:'Temp Badge Text'}, type:'Color', defaultValue:'#f59e0b', bindable:true, responsive:true },
-        tempUrgentBg: { label:{en:'Temp Urgent BG'}, type:'Color', defaultValue:'rgba(239,68,68,0.12)', bindable:true, responsive:true },
-        tempUrgentText: { label:{en:'Temp Urgent Text'}, type:'Color', defaultValue:'#ef4444', bindable:true, responsive:true },
-        scrollbarThumb: { label:{en:'Scrollbar Thumb'}, type:'Color', defaultValue:'#333333', bindable:true, responsive:true },
+        tempBadgeBg: { label:{en:'Temp Badge BG', pl:'Tło tymczasowego badge'}, type:'Color', options:{nullable:true}, defaultValue:'#f59e0b1f', bindable:true, responsive:true },
+        tempBadgeText: { label:{en:'Temp Badge Text', pl:'Tekst tymczasowego badge'}, type:'Color', defaultValue:'#f59e0b', bindable:true, responsive:true },
+        tempUrgentBg: { label:{en:'Temp Urgent BG', pl:'Tło pilnego badge'}, type:'Color', options:{nullable:true}, defaultValue:'#ef44441f', bindable:true, responsive:true },
+        tempUrgentText: { label:{en:'Temp Urgent Text', pl:'Tekst pilnego badge'}, type:'Color', defaultValue:'#ef4444', bindable:true, responsive:true },
+        scrollbarThumb: { label:{en:'Scrollbar Thumb', pl:'Kolor suwaka'}, type:'Color', defaultValue:'#333333', bindable:true, responsive:true },
 
         // === NEW LABELS ===
         labelMatrix: { label:{en:'Matrix page title', pl:'Tytuł: Matryca'}, type:'Text', defaultValue:'', bindable:true },
