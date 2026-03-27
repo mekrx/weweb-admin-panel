@@ -314,7 +314,7 @@ export default {
         labelSelectDepts: { label:{en:'Select depts', pl:'Wybierz oddziały'}, type:'Text', defaultValue:'Wybierz oddziały', bindable:true },
 
         // === EXTEND / OTHER MODALS ===
-        labelExtendAccess: { label:{en:'Extend access', pl:'Przedłuż dostęp'}, type:'Text', defaultValue:'Przedłuż dostęp', bindable:true },
+        labelExtendAccess: { label:{en:'Edit temp access', pl:'Edytuj dostęp'}, type:'Text', defaultValue:'Edytuj dostęp', bindable:true },
         labelNewExpiry: { label:{en:'New expiry', pl:'Nowa data wygaśnięcia'}, type:'Text', defaultValue:'Nowa data wygaśnięcia', bindable:true },
         labelExtendReason: { label:{en:'Extend reason', pl:'Powód przedłużenia'}, type:'Text', defaultValue:'', bindable:true },
         labelExtendReasonPlaceholder: { label:{en:'Extend reason placeholder', pl:'np. kontynuacja zastępstwa...'}, type:'Text', defaultValue:'', bindable:true },
