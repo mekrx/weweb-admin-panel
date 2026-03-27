@@ -24,7 +24,6 @@ export default {
 
             // --- TEMP ACCESS ---
             ['tempIndicatorColor', 'tempRoleBorder'],
-            ['tempBadgeBg', 'tempBadgeText', 'tempUrgentBg', 'tempUrgentText'],
 
             // --- DEPARTMENTS TEMP ---
             ['odzTempBorder', 'odzTempText', 'odzTempIndicator', 'odzIndicatorOn', 'odzIndicatorOff'],
@@ -127,11 +126,6 @@ export default {
         // === ROLE BADGE COLORS ===
         labelRoleColor: { label:{en:'Role editor: Color section label', pl:'Kolor roli'}, type:'Text', defaultValue:'Kolor roli', bindable:true },
 
-        // === TEMP BADGE COLORS ===
-        tempBadgeBg: { label:{en:'Temp Badge BG', pl:'Tło odznaki tymczasowego dostępu'}, type:'Color', defaultValue:'rgba(245,158,11,0.12)', bindable:true, responsive:true },
-        tempBadgeText: { label:{en:'Temp Badge Text', pl:'Tekst odznaki tymczasowego dostępu'}, type:'Color', defaultValue:'#f59e0b', bindable:true, responsive:true },
-        tempUrgentBg: { label:{en:'Temp Urgent BG', pl:'Tło odznaki wygasającego dostępu'}, type:'Color', defaultValue:'rgba(239,68,68,0.12)', bindable:true, responsive:true },
-        tempUrgentText: { label:{en:'Temp Urgent Text', pl:'Tekst odznaki wygasającego dostępu'}, type:'Color', defaultValue:'#ef4444', bindable:true, responsive:true },
 
         // === CHANGE / DIFF INDICATORS ===
         changePositiveColor: { label:{en:'Positive change (green)',pl:'Zmiana pozytywna (zielony)'}, type:'Color', defaultValue:'#22c55e', bindable:true, responsive:true },
