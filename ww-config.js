@@ -4,41 +4,33 @@ export default {
         icon: 'settings',
         customStylePropertiesOrder: [
             // --- CONNECTION ---
-            {label:'Połączenie'},
             ['supabaseUrl', 'supabaseAnonKey'],
 
             // --- LAYOUT ---
-            {label:'Układ'},
             ['showSidebar','sidebarWidth','sidebarBgColor','sidebarBorderColor','sidebarTopOffset','sidebarZIndex'],
             ['contentPadding','contentMaxWidth'],
 
             // --- COLORS ---
-            {label:'Kolory'},
             ['accentColor','accentHoverColor','bgColor','cardBgColor','cardBorderRadius'],
             ['borderColor','borderLightColor'],
             ['textColor','textMutedColor','textHintColor'],
 
             // --- TYPOGRAPHY ---
-            {label:'Typografia'},
             ['titleFontSize','titleFontWeight','bodyFontSize','smallFontSize','fontFamily'],
 
             // --- NAVIGATION ---
-            {label:'Nawigacja'},
             ['navActiveColor','navActiveBg','navInactiveColor','navHoverBg'],
             ['detailTabActiveColor','detailTabActiveBorder'],
 
             // --- BADGES ---
-            {label:'Odznaki'},
             ['badgeFontSize','badgePadding','badgeBorderRadius','tableRoleBadgeSize','tableDeptBadgeSize'],
             ['badgeSaBg','badgeSaText'],
 
             // --- FORM ELEMENTS ---
-            {label:'Pola formularzy'},
             ['inputBgColor','inputBorderColor','inputFocusBorderColor','inputBorderRadius','inputPadding','inputFontSize'],
             ['selectBgColor','selectTextColor','selectBorderColor','selectFontSize','selectOptionBg','selectOptionText','selectBorderRadius','selectHoverBg','selectHoverText'],
 
             // --- BUTTONS ---
-            {label:'Przyciski'},
             ['btnPrimaryBg','btnPrimaryText','btnPrimaryBorder','btnBorderRadius','btnPadding','btnFontSize'],
             ['btnSecondaryBg','btnSecondaryText','btnSecondaryBorder'],
             ['btnGhostBg','btnGhostText','btnGhostBorder','btnGhostHoverBorder'],
@@ -46,103 +38,83 @@ export default {
             ['btnCloseBg','btnCloseText','btnCloseHoverBg','btnCloseHoverText','btnCloseSize','btnCloseBorderRadius'],
 
             // --- TABLE ---
-            {label:'Tabela'},
             ['tableHeaderBg','tableRowHoverBg','tableRowSelectedBg','tableRowBorderColor'],
 
             // --- STATUS ---
-            {label:'Wskaźniki statusu'},
             ['statusActiveColor','statusInactiveColor','statusTerminatedColor','statusVacationColor'],
             ['statusActiveTextColor','statusInactiveTextColor','statusTerminatedTextColor','statusVacationTextColor'],
 
             // --- ACTION BADGES (CRUD) ---
-            {label:'Odznaki akcji (S/I/U/D)'},
             ['actionActiveBg','actionActiveText','actionActiveBorder'],
             ['actionSelectBg','actionSelectText','actionInsertBg','actionInsertText','actionUpdateBg','actionUpdateText','actionDeleteBg','actionDeleteText','actionAllBg','actionAllText'],
 
             // --- DEPARTMENTS ---
-            {label:'Widok oddziałów'},
             ['odzActiveBg','odzActiveBorder','odzActiveText','odzInactiveBg','odzInactiveBorder','odzInactiveText'],
             ['odzTempBorder','odzTempBg','odzTempText','odzTempIndicator','odzIndicatorOn','odzIndicatorOff'],
 
             // --- TEMP ACCESS ---
-            {label:'Dostęp tymczasowy'},
             ['tempIndicatorColor','tempRoleBorder'],
             ['tempBadgeBg','tempBadgeText','tempUrgentBg','tempUrgentText'],
 
             // --- CHANGES INDICATORS ---
-            {label:'Wskaźniki zmian'},
             ['changePositiveColor','changeNegativeColor'],
             ['diffPositiveColor','diffNegativeColor','diffNeutralColor'],
 
             // --- MODALS & OVERLAYS ---
-            {label:'Modalne i panele'},
             ['overlayBgColor','panelWidth','panelBgColor'],
             ['modalBgColor','modalBorderRadius','modalMaxWidth','modalPadding'],
 
             // --- TOASTS ---
-            {label:'Powiadomienia'},
             ['toastSuccessBg','toastSuccessText','toastErrorBg','toastErrorText','toastInfoBg','toastInfoText'],
 
             // --- CHART ---
-            {label:'Wykres na dashboardzie'},
             ['chartBg','chartBorder','chartLineColor','chartLineWidth','chartDotColor','chartDotSize','chartGridColor','chartLabelColor','chartHeight','chartAreaOpacity','dateIconFilter'],
 
             // --- ANIMATION & SPACING ---
-            {label:'Animacje i odstępy'},
             ['animationDuration','animationEasing'],
             ['spacingXs','spacingSm','spacingMd','spacingLg','spacingXl'],
 
             // --- SCROLLBAR ---
-            {label:'Pasek przewijania'},
             ['scrollbarThumb'],
 
             // --- ROLE COLORS ---
-            {label:'Kolory ról'},
             ['labelRoleColor'],
 
             // --- ICONS ---
-            {label:'Ikony'},
             ['iconNavDashboard','iconNavUsers','iconNavRoles','iconNavAudit','iconNavTemp','iconNavMatrix','iconNavRequests','navIconSize','navIconColor'],
             ['iconSetup','iconTempIndicator','iconClose','iconEdit','iconDelete','iconCheckmark','iconSize'],
 
             // --- STAT CARDS ---
-            {label:'Statystyki na dashboardzie'},
             ['labelStatManagers','labelStatClients','labelStatVacation','labelStatPending','labelStatChanges','labelStatTempGrants','labelStatRolesCount','labelStatDepts'],
             ['showStatManagers','showStatClients','showStatVacation','showStatPending','showStatChanges','showStatTempGrants','showStatRolesCount','showStatDepts'],
             ['orderStatManagers','orderStatClients','orderStatVacation','orderStatPending','orderStatChanges','orderStatTempGrants','orderStatRolesCount','orderStatDepts'],
 
             // --- LABELS: NAVIGATION ---
-            {label:'Teksty: Nawigacja'},
             ['labelSidebarTitle','labelSidebarSubtitle'],
             ['labelDashboard','labelUsers','labelRoles','labelAudit','labelTemp','labelMatrix','labelRequests'],
 
             // --- LABELS: DASHBOARD ---
-            {label:'Teksty: Dashboard'},
             ['labelRolesDistribution','labelDepartments','labelClientsChart','labelDiffPeriod'],
 
             // --- LABELS: TABLE ---
-            {label:'Teksty: Tabela użytkowników'},
             ['labelColUser','labelColRoles','labelColDepts','labelColClients','labelColStatus'],
             ['labelStatusActive','labelStatusInactive','labelStatusTerminated','labelStatusVacation'],
             ['labelSearch','labelAllRoles','labelAllStatuses','labelAllDepts','labelNoResults','labelSuperAdmin','labelVacation','labelPrev','labelNext'],
             ['labelEmptyUsers','labelEmptyAudit','labelEmptyTemp','labelEmptyRoles'],
 
             // --- LABELS: BUTTONS ---
-            {label:'Teksty: Przyciski'},
             ['labelBtnCopy','labelBtnAddRole','labelBtnTempAccess','labelBtnNewRole','labelBtnEditRole','labelBtnEditPerms','labelBtnApply','labelBtnApplyModified'],
             ['labelBtnExtend','labelBtnRevoke','labelBtnExport'],
             ['labelBulkSelected','labelBulkAddRole','labelBulkAddDept'],
             ['labelSave','labelCreate','labelCancel','labelConfirm'],
 
             // --- LABELS: DETAIL PANEL ---
-            {label:'Teksty: Panel szczegółów'},
             ['labelTabRoles','labelTabVisibility','labelTabDepts','labelTabHistory'],
             ['labelAssignedRoles','labelPermissions','labelVisibleClients','labelAutoFromRoles','labelNoRoles','labelSuperAdminAccess','labelNoPermissions'],
             ['labelUserDepts','labelAllDeptsAccess','labelDept','labelAllRolesAssigned'],
             ['labelHistory','labelGrantedBy','labelGrantedAt','labelExpiresAt'],
 
             // --- LABELS: MODALS ---
-            {label:'Teksty: Modalne'},
             ['labelAddRoleFor','labelCopyFrom','labelSelectTarget','labelReviewCopy','labelChangeTarget','labelChanged','labelSummary','labelTarget','labelNone','labelOf','labelSelectAll','labelClearAll'],
             ['labelTempAccessFor','labelTempType','labelTempRole','labelTempDept','labelTempExpires','labelTempReason','labelTempReasonPlaceholder','labelTempApply'],
             ['labelSelectRole','labelSelectDepts'],
@@ -153,12 +125,10 @@ export default {
             ['labelContrastWarning'],
 
             // --- LABELS: AUDIT ---
-            {label:'Teksty: Audyt'},
             ['labelAuditAllTables','labelAuditEmailPlaceholder','labelNoAuditEntries','labelAuditSelectUsers','labelAuditShowing'],
             ['labelToday','labelDays'],
 
             // --- LABELS: TEMP & CONFIRM ---
-            {label:'Teksty: Tymczasowe i potwierdzenia'},
             ['labelNoTempGrants'],
             ['labelConfirmDeleteRole','labelConfirmDeleteRoleTitle','labelConfirmRemoveRole','labelConfirmRemoveRoleTitle','labelConfirmRevoke','labelConfirmRevokeTitle']
         ]
@@ -571,10 +541,10 @@ export default {
         changeNegativeColor: { label:{en:'Negative change (red)',pl:'Zmiana negatywna (czerwony)'}, type:'Color', defaultValue:'#ef4444', bindable:true, responsive:true },
 
         // === TEMP BADGE COLORS ===
-        tempBadgeBg: { label:{en:'Temp Badge BG', pl:'Tło tymczasowego badge'}, type:'Color', options:{nullable:true}, defaultValue:'#f59e0b1f', bindable:true, responsive:true },
-        tempBadgeText: { label:{en:'Temp Badge Text', pl:'Tekst tymczasowego badge'}, type:'Color', defaultValue:'#f59e0b', bindable:true, responsive:true },
-        tempUrgentBg: { label:{en:'Temp Urgent BG', pl:'Tło pilnego badge'}, type:'Color', options:{nullable:true}, defaultValue:'#ef44441f', bindable:true, responsive:true },
-        tempUrgentText: { label:{en:'Temp Urgent Text', pl:'Tekst pilnego badge'}, type:'Color', defaultValue:'#ef4444', bindable:true, responsive:true },
+        tempBadgeBg: { label:{en:'Temp Badge BG', pl:'Tło odznaki tymczasowego dostępu'}, type:'Color', defaultValue:'rgba(245,158,11,0.12)', bindable:true, responsive:true },
+        tempBadgeText: { label:{en:'Temp Badge Text', pl:'Tekst odznaki tymczasowego dostępu'}, type:'Color', defaultValue:'#f59e0b', bindable:true, responsive:true },
+        tempUrgentBg: { label:{en:'Temp Urgent BG', pl:'Tło odznaki wygasającego dostępu'}, type:'Color', defaultValue:'rgba(239,68,68,0.12)', bindable:true, responsive:true },
+        tempUrgentText: { label:{en:'Temp Urgent Text', pl:'Tekst odznaki wygasającego dostępu'}, type:'Color', defaultValue:'#ef4444', bindable:true, responsive:true },
         scrollbarThumb: { label:{en:'Scrollbar Thumb', pl:'Kolor suwaka'}, type:'Color', defaultValue:'#333333', bindable:true, responsive:true },
 
         // === NEW LABELS ===
