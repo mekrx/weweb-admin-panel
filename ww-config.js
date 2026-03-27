@@ -10,10 +10,10 @@ export default {
             ['supabaseUrl', 'supabaseAnonKey'],
 
             // --- SIDEBAR ---
-            ['showSidebar', 'sidebarTopOffset', 'sidebarZIndex'],
+            ['showSidebar', 'sidebarWidth', 'sidebarTopOffset', 'sidebarZIndex'],
 
             // --- CHART ---
-            ['chartBg', 'chartBorder', 'chartLineColor', 'chartDotColor', 'chartDotSize', 'chartGridColor', 'chartLabelColor', 'chartHeight', 'chartAreaOpacity'],
+            ['chartLineColor', 'chartDotColor', 'chartDotSize', 'chartLineWidth', 'chartHeight'],
 
             // --- STAT CARD COLORS ---
             ['statManagersColor', 'statClientsColor', 'statVacationColor', 'statPendingColor', 'statChangesColor', 'statTempColor', 'statRolesColor', 'statDeptsColor'],
@@ -27,7 +27,7 @@ export default {
             ['tempBadgeBg', 'tempBadgeText', 'tempUrgentBg', 'tempUrgentText'],
 
             // --- DEPARTMENTS TEMP ---
-            ['odzTempBorder', 'odzTempBg', 'odzTempText', 'odzTempIndicator', 'odzIndicatorOn', 'odzIndicatorOff'],
+            ['odzTempBorder', 'odzTempText', 'odzTempIndicator', 'odzIndicatorOn', 'odzIndicatorOff'],
 
             // --- CHANGES ---
             ['changePositiveColor', 'changeNegativeColor'],
@@ -99,6 +99,7 @@ export default {
 
         // === SIDEBAR ===
         showSidebar: { label:{en:'Show Sidebar'}, type:'OnOff', defaultValue:true, bindable:true, responsive:true },
+        sidebarWidth: { label:{en:'Sidebar Width', pl:'Szerokość sidebara'}, type:'Length', options:{unitChoices:[{value:'px',label:'px',min:160,max:350}]}, defaultValue:'220px', bindable:true, responsive:true },
         sidebarTopOffset: { label:{en:'Sidebar Top Offset', pl:'Offset górny sidebara'}, type:'Length', options:{unitChoices:[{value:'px',label:'px',min:0,max:200}]}, defaultValue:'0px', bindable:true, responsive:true },
         sidebarZIndex: { label:{en:'Sidebar Z-Index'}, type:'Number', options:{min:0,max:9999,step:1}, defaultValue:0, bindable:true },
         labelSidebarTitle: { label:{en:'Sidebar Title'}, type:'Text', defaultValue:'', bindable:true },
@@ -116,7 +117,6 @@ export default {
 
         // === DEPARTMENT TEMP INDICATORS ===
         odzTempBorder: { label:{en:'Dept Temp Border', pl:'Oddział tymczasowy: ramka'}, type:'Color', defaultValue:'#f59e0b', bindable:true },
-        odzTempBg: { label:{en:'Dept Temp BG', pl:'Oddział tymczasowy: tło'}, type:'Color', defaultValue:'rgba(245,158,11,0.1)', bindable:true },
         odzTempText: { label:{en:'Dept Temp Text', pl:'Oddział tymczasowy: tekst'}, type:'Color', defaultValue:'#f59e0b', bindable:true },
         odzIndicatorOn: { label:{en:'Dept Indicator On', pl:'Wskaźnik oddziału: aktywny'}, type:'Color', defaultValue:'#4B8765', bindable:true },
         odzIndicatorOff: { label:{en:'Dept Indicator Off', pl:'Wskaźnik oddziału: nieaktywny'}, type:'Color', defaultValue:'#333333', bindable:true },
@@ -141,15 +141,11 @@ export default {
         diffNeutralColor: { label:{en:'Diff Neutral', pl:'Różnica: bez zmian'}, type:'Color', defaultValue:'#8a8880', bindable:true },
 
         // === CHART ===
-        chartBg: { label:{en:'Chart BG'}, type:'Color', defaultValue:'transparent', bindable:true },
-        chartBorder: { label:{en:'Chart Border'}, type:'Color', defaultValue:'#2a2a28', bindable:true },
         chartLineColor: { label:{en:'Chart Line Color'}, type:'Color', defaultValue:'#4B8765', bindable:true },
         chartDotColor: { label:{en:'Chart Dot Color'}, type:'Color', defaultValue:'#6BAA85', bindable:true },
         chartDotSize: { label:{en:'Chart Dot Size'}, type:'Length', options:{unitChoices:[{value:'px',label:'px',min:2,max:8}]}, defaultValue:'4px', bindable:true },
-        chartGridColor: { label:{en:'Chart Grid Color'}, type:'Color', defaultValue:'rgba(255,255,255,0.05)', bindable:true },
-        chartLabelColor: { label:{en:'Chart Label Color'}, type:'Color', defaultValue:'#8a8880', bindable:true },
+        chartLineWidth: { label:{en:'Chart Line Width'}, type:'Length', options:{unitChoices:[{value:'px',label:'px',min:1,max:5}]}, defaultValue:'2px', bindable:true },
         chartHeight: { label:{en:'Chart Height'}, type:'Length', options:{unitChoices:[{value:'px',label:'px',min:100,max:500}]}, defaultValue:'200px', bindable:true, responsive:true },
-        chartAreaOpacity: { label:{en:'Chart Area Opacity'}, type:'Number', options:{min:0,max:1,step:0.05}, defaultValue:0.15, bindable:true },
 
         // === STAT CARD ACCENT COLORS ===
         statManagersColor: { label:{en:'Stat color: Managers', pl:'Kolor paska: Menedżerowie'}, type:'Color', defaultValue:'#22c55e', bindable:true },
